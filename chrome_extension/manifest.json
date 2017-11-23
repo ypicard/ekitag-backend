@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "EkiTag",
+  "description": "This extension directly adds match results to Eki's impressive database.",
+  "version": "1.0",
+  "browser_action":
+  {
+    "default_icon": "ekitag.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "*://tagpro-chord.koalabeast.com/*"
+  ],
+  "content_scripts": [
+  {
+    "matches": [
+      "*://tagpro-chord.koalabeast.com/*"
+    ],
+    "js": ["content.js"],
+    "run_at": "document_end"
+  }],
+  "web_accessible_resources": ["script.js"]
+}
