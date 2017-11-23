@@ -1,3 +1,7 @@
+# sublime files
+*.sublime-project
+*.sublime-workspace
+
 # System Files
 .DS_Store
 Thumbs.db
