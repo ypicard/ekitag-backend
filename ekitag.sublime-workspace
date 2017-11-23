@@ -1,0 +1,1068 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Goth",
+				"Gotham-Medium"
+			],
+			[
+				"origin",
+				"originalNode"
+			],
+			[
+				"orig",
+				"originalNode"
+			],
+			[
+				"wi",
+				"with"
+			],
+			[
+				"hidd",
+				"hidden_on_export"
+			],
+			[
+				"hide",
+				"hide_on_export"
+			],
+			[
+				"num",
+				"numberService"
+			],
+			[
+				"data",
+				"datasets"
+			],
+			[
+				"raw_data",
+				"raw_dataset\t(linechart.component.ts)"
+			],
+			[
+				"showL",
+				"showLegend\t(linechart.component.ts)"
+			],
+			[
+				"sett",
+				"settings"
+			],
+			[
+				"se",
+				"settings"
+			],
+			[
+				"aggreg",
+				"aggregated_field_ind"
+			],
+			[
+				"prep",
+				"prepareDatasetsforChart\tmethod"
+			],
+			[
+				"Filter",
+				"FilterService"
+			],
+			[
+				"filt",
+				"filterService"
+			],
+			[
+				"fil",
+				"filter.service"
+			],
+			[
+				"time",
+				"time_series\t(carr_params.ts)"
+			],
+			[
+				"char",
+				"chartcontainer\t(chartblock.component.html)"
+			],
+			[
+				"respo",
+				"responseType"
+			],
+			[
+				"RequestOp",
+				"RequestOptionsArgs"
+			],
+			[
+				"request",
+				"requestOptions"
+			],
+			[
+				"Requesr",
+				"RequestOptionsArgs"
+			],
+			[
+				"cus",
+				"custom__block\t(chartblock.component.html)"
+			],
+			[
+				"Export",
+				"ExportService"
+			],
+			[
+				"expo",
+				"exportService\tproperty"
+			],
+			[
+				"Expo",
+				"ExportService"
+			],
+			[
+				"exported",
+				"exportedNode"
+			],
+			[
+				"export",
+				"export_ekiscreen_endpoint\t(environment.ts)"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			],
+			[
+				"backgrou",
+				"background-color"
+			],
+			[
+				"max",
+				"max-height"
+			],
+			[
+				"option",
+				"optioncontainer"
+			],
+			[
+				"border",
+				"border-top"
+			],
+			[
+				"backgr",
+				"background-color"
+			],
+			[
+				"unit",
+				"unit_display\t(carr_params.ts)"
+			],
+			[
+				"pre",
+				"prepareChartForQuery\tmethod"
+			],
+			[
+				"chart",
+				"chartService\tlet"
+			],
+			[
+				"prepa",
+				"prepareChartForQuery\tmethod"
+			],
+			[
+				"ch",
+				"chartService"
+			],
+			[
+				"prepareData",
+				"prepareDatasetsforChart"
+			],
+			[
+				"aggre",
+				"aggregated_field"
+			],
+			[
+				"mapp",
+				"mapping"
+			],
+			[
+				"trna",
+				"transition"
+			],
+			[
+				"value",
+				"value_x"
+			],
+			[
+				"usef",
+				"usefull\tlet"
+			],
+			[
+				"mappi",
+				"mappingChartNestData"
+			],
+			[
+				"aggregate",
+				"aggregated_fields"
+			],
+			[
+				"optio",
+				"options"
+			],
+			[
+				"sle",
+				"selected\t(filters.component.ts)"
+			],
+			[
+				"item",
+				"item_mapped"
+			],
+			[
+				"glo",
+				"global_filter"
+			],
+			[
+				"dimes",
+				"dimensions_dict_for_display\tproperty"
+			],
+			[
+				"updateF",
+				"updateFilter\t(filters.component.ts)"
+			],
+			[
+				"chartpa",
+				"chartpage_filters"
+			],
+			[
+				"chartp",
+				"chartpage_filters\t(chartpage.component.ts)"
+			],
+			[
+				"upd",
+				"updateFilters\tmethod"
+			],
+			[
+				"margi",
+				"margin-left"
+			],
+			[
+				"paddin",
+				"padding-right"
+			],
+			[
+				"padding",
+				"padding-right"
+			],
+			[
+				"options",
+				"options_source\tproperty"
+			],
+			[
+				"displ",
+				"display_mode"
+			],
+			[
+				"Elem",
+				"ElementRef"
+			],
+			[
+				"pr",
+				"private"
+			],
+			[
+				"dis",
+				"displayChart"
+			],
+			[
+				"lege",
+				"legendInteractive"
+			],
+			[
+				"co",
+				"color"
+			],
+			[
+				"day",
+				"day_mouseover"
+			],
+			[
+				"en",
+				"end\t(areachart.component.ts)"
+			],
+			[
+				"text",
+				"text-anchor"
+			],
+			[
+				"get",
+				"getMonth"
+			],
+			[
+				"selec",
+				"selectAll"
+			],
+			[
+				"z",
+				"zScale\tproperty"
+			],
+			[
+				"valu",
+				"value"
+			],
+			[
+				"light",
+				"lightgrey"
+			],
+			[
+				"trans",
+				"transparent"
+			],
+			[
+				"tran",
+				"transparent\t(areachart.component.ts)"
+			],
+			[
+				"dela",
+				"deltaWeek"
+			],
+			[
+				"end",
+				"endOfMonth"
+			],
+			[
+				"y",
+				"yAxis\tproperty"
+			],
+			[
+				"freq",
+				"frequency"
+			],
+			[
+				"yS",
+				"ySteps\tproperty"
+			],
+			[
+				"xS",
+				"xSteps\tproperty"
+			],
+			[
+				"frequenc",
+				"frequency"
+			],
+			[
+				"day_",
+				"day_short"
+			],
+			[
+				"Range",
+				"RangeError"
+			],
+			[
+				"days",
+				"day_short"
+			],
+			[
+				"frequ",
+				"frequencies"
+			],
+			[
+				"tm",
+				"timeFormat"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"flex",
+				"flex-elmt\t(home.component.html)"
+			],
+			[
+				"cont",
+				"container-flex\t(home.component.html)"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"ri",
+				"right-panel\t(home.component.scss)"
+			],
+			[
+				"table",
+				"table-cell"
+			],
+			[
+				"inlin",
+				"inline-block"
+			],
+			[
+				"left",
+				"left-panel\t(home.component.html)"
+			],
+			[
+				"show",
+				"showLegend"
+			],
+			[
+				"tra",
+				"translate"
+			],
+			[
+				"sele",
+				"selection"
+			],
+			[
+				"strok",
+				"stroke-dasharray\t(charts.scss)"
+			],
+			[
+				"impor",
+				"important"
+			],
+			[
+				"tick",
+				"tickFormat"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"stroke",
+				"stroke-width"
+			],
+			[
+				"dra",
+				"drawPoints"
+			],
+			[
+				"x",
+				"xScale\tproperty"
+			],
+			[
+				"line",
+				"linechart.component\t(linechart.component.spec.ts)"
+			],
+			[
+				"nested",
+				"nested_dataset"
+			],
+			[
+				"draw",
+				"drawLines\tmethod"
+			],
+			[
+				"bub",
+				"bubbles"
+			],
+			[
+				"bot",
+				"bottom"
+			],
+			[
+				"fill",
+				"fill-opacity"
+			],
+			[
+				"zScal",
+				"zScale"
+			],
+			[
+				"stro",
+				"stroke-dasharray"
+			],
+			[
+				"temp",
+				"temp-circle\t(mappingchart.component.ts)"
+			],
+			[
+				"sel",
+				"selectAll"
+			],
+			[
+				"cir",
+				"circles-interactive"
+			],
+			[
+				"mous",
+				"mouseover"
+			],
+			[
+				"zS",
+				"zScaleInteractive"
+			],
+			[
+				"in",
+				"interactiveZScale"
+			],
+			[
+				"mouse",
+				"mouseout"
+			],
+			[
+				"str",
+				"stroke-width"
+			],
+			[
+				"bott",
+				"bottomleft"
+			],
+			[
+				"top",
+				"topright"
+			],
+			[
+				"bon",
+				"boundingBox"
+			],
+			[
+				"this",
+				"this_elem"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "backend/requirements.txt",
+			"settings":
+			{
+				"buffer_size": 233,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "backend/server.py",
+			"settings":
+			{
+				"buffer_size": 838,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "from flask import Flask"
+			}
+		},
+		{
+			"file": "backend/runtime.txt",
+			"settings":
+			{
+				"buffer_size": 13,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "backend/run.py",
+			"settings":
+			{
+				"buffer_size": 100,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "import server"
+			}
+		},
+		{
+			"file": "backend/Procfile",
+			"settings":
+			{
+				"buffer_size": 34,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "web: gunicorn run:app --log-file=-"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "ins",
+		"selected_items":
+		[
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 444.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/fmeunier/rails_projects/ekitag",
+		"/Users/fmeunier/rails_projects/ekitag/backend",
+		"/Users/fmeunier/rails_projects/ekitag/frontend"
+	],
+	"file_history":
+	[
+		"/Users/fmeunier/rails_projects/Mediatool/src/index.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/environments/environment.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/environments/environment.prod.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles/config.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles/fonts.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/chartblock/chartblock.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/number.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/home/home.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/filter.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/chartpage/chartpage.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/chart.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/mappingchart/mappingchart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/linechart/linechart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/home/home.component.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/client_specific/carr_params.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/linechart/linechart.component.html",
+		"/Users/fmeunier/rails_projects/MediatoolApi/app/models/concerns/aggregations.rb",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/filters/filters.component.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/app.module.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/package.json",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/filters/filters.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/chartblock/chartblock.component.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/chartpage/chartpage.component.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/dashboard.routes.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/filters/filters.component.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/chartblock/chartblock.component.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/pac.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/export.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/mediaplan/mediaplan-view/mediaplan-view.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/barchart/barchart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles/mixins.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/donutchart/donutchart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles/charts.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/areachart/areachart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/investment.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/dashboard.module.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/mapping/mapping.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/styles/commons.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/mapping/mapping.component.html",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/globalsetting.service.ts",
+		"/Users/fmeunier/rails_projects/lol.js",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/_services/date.service.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/githeatchart/githeatchart.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/home/home.component.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/githeatchart/githeatchart.component.spec.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/githeatchart/githeatchart.component.scss",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/topmenu/topmenu.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/linechart/linechart.component.spec.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/editor/editor.module.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/editor/editor-home/editor-home.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/mappingchart/mappingchart.component.css",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/mapping/mapping.component.spec.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/dashboard/dashboard.component.ts",
+		"/Users/fmeunier/rails_projects/Mediatool/src/app/charts/mappingchart/mappingchart.component.spec.ts",
+		"/Users/fmeunier/rails_projects/MediatoolApi/config/application.yml",
+		"/Users/fmeunier/rails_projects/Babar/app/views/layouts/application.html.erb",
+		"/Users/fmeunier/rails_projects/Babar/config/database.yml",
+		"/Users/fmeunier/rails_projects/Babar/config/application.yml",
+		"/Users/fmeunier/rails_projects/Babar/config/application.rb",
+		"/Users/fmeunier/rails_projects/Babar/config/environments/production.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/stylesheets/styles/section-popup.scss",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/config.js.erb",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/routes.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/directives/respos-update.directive.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/directive.respos.update.html",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/stylesheets/styles/forms.scss",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/controllers/PilotageCtrl.js",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/exports_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/views/exports/excel.xlsx.axlsx",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/home.admin.pilotagereview.html",
+		"/Users/fmeunier/rails_projects/Babar/vendor/assets/bower_components/jquery/dist/jquery.js",
+		"/Users/fmeunier/rails_projects/Babar/public/assets/application-552975bfa2178be0e272c7fca4a01bb64c7639d80e127155b0ccc3f76e9b71aa.js",
+		"/Users/fmeunier/rails_projects/Babar/db/prod-seeds/add_pilotages_3.rb",
+		"/Users/fmeunier/rails_projects/Babar/db/prod-seeds/add_pilotages_2.rb",
+		"/Users/fmeunier/rails_projects/Babar/db/prod-seeds/add_pilotages_1.rb",
+		"/Users/fmeunier/rails_projects/Babar/config/environments/feature_test.rb",
+		"/Users/fmeunier/rails_projects/Babar/README.md",
+		"/Users/fmeunier/rails_projects/Babar/doc/models_brief.svg",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/application_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/api/v1/missionpilotages_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/models/user.rb",
+		"/Users/fmeunier/rails_projects/Babar/lib/tasks/data_repair.rake",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/api/v1/missionneeds_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/api/v1/missionstaffings_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/controllers/api/v1/users_controller.rb",
+		"/Users/fmeunier/rails_projects/Babar/Gemfile",
+		"/Users/fmeunier/rails_projects/Babar/db/prod-seeds/add_needs_1.rb",
+		"/Users/fmeunier/rails_projects/Babar/.gitignore",
+		"/Users/fmeunier/rails_projects/Babar/db/raw-data/pilotage_us_1.csv",
+		"/Users/fmeunier/rails_projects/Babar/db/raw-data/pilotage_fr_uk_uae_1.csv",
+		"/Users/fmeunier/rails_projects/Babar/db/raw-data/pilotage_hk_1.csv",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/objectFactory.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/home.admin.accounts.html",
+		"/Users/fmeunier/rails_projects/Babar/vendor/assets/bower_components/handsontable/dist/handsontable.full.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/dataFactory.js",
+		"/Users/fmeunier/rails_projects/Babar/db/raw-data/pilotage_fr_uk_1.csv",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/rowPopover.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/home.admin.staffingreview.html",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/controllers/HomeCtrl.js",
+		"/Users/fmeunier/rails_projects/Babar/bower.json",
+		"/Users/fmeunier/rails_projects/Babar/Gemfile.lock",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/needsFactory.js",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/missionneeds/show_minimal.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/missionneeds/index_minimal.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/config/routes.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/home.admin.review.html",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/ekiHelper.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/Missionstaffing.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/services/permissionFactory.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/controllers/ReviewCtrl.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/angular/controllers/StaffingReviewCtrl.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/rowValidity.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/supraHeader.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/columnIconHeader.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/stylesheets/styles/eki-hot.scss",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/selectionCalculus.js",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/templates/home.responsible.pilotage.html",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/rowAlternateColor.js",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/users/show_light.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/responsibles/show_user.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/clients/show_with_account.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/clienttypes/show.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/statuses/show.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/assets/javascripts/hot/plugins/columnSpacer.js",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/missionpilotages/index_minimal.json.rabl",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/missionpilotages/show_minimal.rb",
+		"/Users/fmeunier/rails_projects/Babar/app/views/api/v1/missionpilotages/show.json.rabl"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "backend/requirements.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 233,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "backend/server.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 838,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								440,
+								440
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"auto_name": "from flask import Flask",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "backend/runtime.txt",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 13,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "backend/run.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 100,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								20
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"auto_name": "import server",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "backend/Procfile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 34,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								34,
+								34
+							]
+						],
+						"settings":
+						{
+							"auto_name": "web: gunicorn run:app --log-file=-",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.doc":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 102.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 100.0
+	},
+	"pinned_build_system": "",
+	"project": "ekitag.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"deve",
+				"config/environments/development.rb"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 484.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 301.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
