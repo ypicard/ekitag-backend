@@ -1,6 +1,5 @@
-# sublime files
-*.sublime-project
-*.sublime-workspace
+#virtual env
+/venv
 
 # System Files
 .DS_Store

@@ -1,2 +1,1 @@
-web: gunicorn backend/run:app --log-file=-
-web: node frontend/server.js
+web: gunicorn run:app --log-file=-
