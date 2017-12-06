@@ -8,6 +8,7 @@ itsdangerous==0.24
 Jinja2==2.10
 jsonschema==2.6.0
 MarkupSafe==1.0
+py-postgresql==1.2.1
 python-dateutil==2.6.1
 pytz==2017.3
 six==1.11.0
