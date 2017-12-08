@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_restplus import Api, Resource, reqparse, abort
 from flask_sslify import SSLify
+from flask_cors import CORS
 
 import postgresql.exceptions
 import postgresql.types
@@ -14,6 +15,7 @@ import config
 
 _app = Flask(__name__)
 _sslify = SSLify(_app)
+_cors = CORS(_app)
 api = Api(_app,
           version="alpha",
           title="EkiTag API",
