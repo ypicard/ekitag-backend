@@ -14,7 +14,7 @@ if not Path('secret.yml').exists():
     print("Looking for secrets in environment")
     env = os.environ['secret']
     if env is not None:
-        self.__config.read(env)
+        self.__config.read_string(env)
     else:
         raise FileNotFoundError('No config available.')
 else:
