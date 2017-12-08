@@ -89,6 +89,33 @@ get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
 delete_match = db.prepare("DELETE FROM matches WHERE id = $1")
 delete_match_stats = db.prepare("DELETE FROM statistics WHERE match_id = $1")
 
+create_pending_match = db.prepare(
+    "INSERT INTO matches_pending (b_score, r_score, datetime, "
+    "b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, "
+    "r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo) "
+    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) "
+    "RETURNING id")
+create_pending_stats = db.prepare(
+    "INSERT INTO statistics_pending (match_id, user_pseudo, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
+    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) "
+    "RETURNING id")
+count_pending_stats_for_user_by_match = db.prepare("SELECT COUNT(*) FROM statistics_pending WHERE match_id = $1 AND user_pseudo = $2")
+count_user_in_pending_match = db.prepare(
+    "SELECT COUNT(*) "
+    "FROM matches_pending "
+    "WHERE id = $1 AND ("
+    "b1_pseudo = $2 OR "
+    "b2_pseudo = $2 OR "
+    "b3_pseudo = $2 OR "
+    "b4_pseudo = $2 OR "
+    "b5_pseudo = $2 OR "
+    "b6_pseudo = $2 OR "
+    "r1_pseudo = $2 OR "
+    "r2_pseudo = $2 OR "
+    "r3_pseudo = $2 OR "
+    "r4_pseudo = $2 OR "
+    "r5_pseudo = $2 OR "
+    "r6_pseudo = $2)")
 get_pending_matches = db.prepare("SELECT * FROM matches_pending")
 get_pending_match_by_id = db.prepare("SELECT * FROM matches_pending WHERE id = $1")
 get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
