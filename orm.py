@@ -143,6 +143,20 @@ update_season_match_count = db.prepare("UPDATE seasons SET played_matches = play
 create_season = db.prepare("INSERT INTO seasons (name, max_time, max_matches, start_time) VALUES ($1, $2, $3, $4) RETURNING id")
 terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2 WHERE id = $1")
 
+# ------------------------- µσ-ranking
+create_user_team_musigma = db.prepare("INSERT INTO musigma_team (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
+create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
+get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
+get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
+update_user_team_musigma = db.prepare("UPDATE musigma_team SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
+update_user_team_global_musigma = lambda user_id, mu, sigma: update_user_team_musigma(user_id, None, mu, sigma)
+create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
+create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
+get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
+get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
+update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
+update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
+
 
 # ========================= UTILS
 # ROW CONVERTER MONKEY PATCHING

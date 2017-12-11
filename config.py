@@ -20,8 +20,10 @@ if not Path('secret.yml').exists():
 else:
     self.__config.read('secret.yml')
 
-self.__secret = self.__config['DEFAULT']
-
 
 def secret():
-    return self.__secret
+    return self.__config['DEFAULT']
+
+
+def musigma():
+    return self.__config['MUSIGMA']
