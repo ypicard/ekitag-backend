@@ -187,6 +187,7 @@ class Match(Resource):
     @api.marshal_with(api.models['Message'])
     def delete(self, match_id):
         delete_match_stats(match_id)
+        remove_match_season(match_id)
         delete_match(match_id)
         return {
             'message': 'Match deleted',
@@ -294,7 +295,6 @@ class MatchPending(Resource):
                                  stats['support'],
                                  stats['pups'])
                 delete_pending_match_stats(match_id)
-                remove_match_season(match_id)
                 delete_pending_match(match_id)
                 season = to_json(get_running_season.first())
                 if season is not None:

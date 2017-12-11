@@ -90,6 +90,7 @@ create_stats = db.prepare(
 get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
 delete_match = db.prepare("DELETE FROM matches WHERE id = $1")
 delete_match_stats = db.prepare("DELETE FROM statistics WHERE match_id = $1")
+remove_match_season = db.prepare("DELETE FROM seasons_matches WHERE match_id = $1")
 
 # ------------------------- PENDING MATCHES
 create_pending_match = db.prepare(
