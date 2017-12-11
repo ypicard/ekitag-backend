@@ -2,29 +2,40 @@
 from flask import Flask
 from flask_restplus import Api, Resource, reqparse, abort
 from flask_restplus.inputs import datetime_from_iso8601
+from flask_jwt_extended import JWTManager, create_access_token
 from flask_sslify import SSLify
 from flask_cors import CORS
 
 import postgresql.exceptions
 import postgresql.types
 
-import email.utils
 import datetime
 
 from views import createViews
 from orm import *
+from utils import admin_required
 import config
 
 # ========================= INIT
 
+secret = config.secret()
 _app = Flask(__name__)
+_app.config['JWT_SECRET_KEY'] = secret.get('secret')
 _sslify = SSLify(_app)
 _cors = CORS(_app)
+_jwt = JWTManager(_app)
 api = Api(_app,
           version="alpha",
           title="EkiTag API",
-          description="Custom tagpro matchmaking and ranking API")
-secret = config.secret()
+          description="Custom tagpro matchmaking and ranking API",
+          authorizations={
+              'admin': {
+                  'type': 'apiKey',
+                  'in': 'header',
+                  'name': 'Authorization',
+              }
+          })
+
 createViews(api)
 
 # ========================= INPUT PARSERS
@@ -33,9 +44,16 @@ parser_create_user = reqparse.RequestParser()
 parser_create_user.add_argument('pseudo', type=str, required=True, location='form')
 parser_create_user.add_argument('trigram', type=str, required=True, location='form')
 
+parser_login = reqparse.RequestParser()
+parser_login.add_argument('login', type=str, required=True, location='form')
+parser_login.add_argument('password', type=str, required=True, location='form')
+
 parser_update_user = reqparse.RequestParser()
 parser_update_user.add_argument('pseudo', type=str, required=True, location='form')
 parser_update_user.add_argument('usual_pseudos', type=str, required=True, action='append', location='form')
+
+parser_promote = reqparse.RequestParser()
+parser_promote.add_argument('password', type=str, required=True, location='form')
 
 parser_validate_match = reqparse.RequestParser()
 parser_validate_match.add_argument('b1_id', type=int, required=True, location='form')
@@ -147,6 +165,8 @@ class User(Resource):
         }
 
     @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
     def delete(self, user_id):
         desactivate_user(user_id)
         return {
@@ -162,6 +182,45 @@ class UserMatches(Resource):
         if matches is None:
             abort(404, "No matches found")
         return matches
+
+
+# ------------------------- ADMIN
+@v1.route("/admin/")
+class AdminAuth(Resource):
+    @api.expect(parser_login)
+    @api.marshal_with(api.models['Auth'])
+    def post(self):
+        args = parser_login.parse_args()
+        if auth_admin.first(args['login'], args['password']):
+            user = to_json(get_user_by_trigram.first(args['login']))
+            return {
+                'message': 'Auth successful',
+                'Bearer': create_access_token(identity=user['id'])
+            }
+        abort(401)
+
+
+@v1.route("/users/<int:user_id>/promote")
+class UserPromote(Resource):
+    @api.expect(parser_promote)
+    @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
+    def post(self, user_id):
+        args = parser_promote.parse_args()
+        promote_user(user_id, args['password'])
+        return {
+            'message': 'User promoted to admin.'
+        }
+
+    @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
+    def delete(self, user_id):
+        block_admin(user_id)
+        return {
+            'message': 'Admin downgraded to simple user'
+        }
 
 
 # ------------------------- MATCHES
@@ -185,6 +244,8 @@ class Match(Resource):
         return match
 
     @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
     def delete(self, match_id):
         delete_match_stats(match_id)
         remove_match_season(match_id)
@@ -249,6 +310,8 @@ class MatchPending(Resource):
 
     @api.expect(parser_validate_match)
     @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
     def put(self, match_id):
         def mapper(color):
             for i in range(1, 7):
@@ -311,6 +374,8 @@ class MatchPending(Resource):
         }
 
     @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
     def delete(self, match_id):
         delete_pending_match_stats(match_id)
         delete_pending_match(match_id)
@@ -373,6 +438,8 @@ class Seasons(Resource):
 
     @api.marshal_with(api.models['Message'])
     @api.expect(parser_create_season)
+    @api.doc(security='admin')
+    @admin_required
     def post(self):
         args = parser_create_season.parse_args()
         count = count_running_seasons.first()
@@ -395,6 +462,8 @@ class Season(Resource):
         return season
 
     @api.marshal_with(api.models['Message'])
+    @api.doc(security='admin')
+    @admin_required
     def delete(self, season_id):
         # TODO : update stars
         terminate_season(season_id, datetime.datetime.now())

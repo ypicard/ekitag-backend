@@ -19,7 +19,13 @@ create_user = db.prepare("INSERT INTO users (trigram, pseudo) VALUES ($1, $2) RE
 get_users = db.prepare("SELECT id, pseudo, usual_pseudos FROM users")
 update_user = db.prepare("UPDATE users SET pseudo = $2, usual_pseudos = $3 WHERE id = $1")
 get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
+get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
+
+# ------------------------- ADMIN
+promote_user = db.prepare("UPDATE users SET is_admin = true, password = crypt($2, gen_salt('bf')) WHERE id = $1")
+auth_admin = db.prepare("SELECT password = crypt($2, password) FROM users WHERE trigram = $1 AND is_admin = true")
+block_admin = db.prepare("UPDATE users SET is_admin = false WHERE id = $1")
 
 # ------------------------- MATCHES
 create_match = db.prepare(

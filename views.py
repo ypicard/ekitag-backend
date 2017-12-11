@@ -8,6 +8,10 @@ def createViews(api):
         'message': String,
         'value': Integer,
     })
+    api.model('Auth', {
+        'message': String,
+        'Bearer': String,
+    })
     # ========================= USERS
     api.model('UserMin', {
         'id': Integer,
