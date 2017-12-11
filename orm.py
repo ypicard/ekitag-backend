@@ -14,12 +14,14 @@ db = postgresql.open(secret.get('pg_uri'))
 # You can ask for any existing field, unused fields will be filtered out using view models.
 # If you need to join, always specify AS and mangle names with $.
 
+# ------------------------- USERS
 create_user = db.prepare("INSERT INTO users (trigram, pseudo) VALUES ($1, $2) RETURNING id")
-get_users = db.prepare("SELECT id, pseudo FROM users")
+get_users = db.prepare("SELECT id, pseudo, usual_pseudos FROM users")
 update_user = db.prepare("UPDATE users SET pseudo = $2, usual_pseudos = $3 WHERE id = $1")
 get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
 
+# ------------------------- MATCHES
 create_match = db.prepare(
     "INSERT INTO matches (b_score, r_score, datetime, "
     "b1_id, b2_id, b3_id, b4_id, b5_id, b6_id, "
@@ -89,6 +91,7 @@ get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
 delete_match = db.prepare("DELETE FROM matches WHERE id = $1")
 delete_match_stats = db.prepare("DELETE FROM statistics WHERE match_id = $1")
 
+# ------------------------- PENDING MATCHES
 create_pending_match = db.prepare(
     "INSERT INTO matches_pending (b_score, r_score, datetime, "
     "b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, "
@@ -121,6 +124,17 @@ get_pending_match_by_id = db.prepare("SELECT * FROM matches_pending WHERE id = $
 get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
 delete_pending_match = db.prepare("DELETE FROM matches_pending WHERE id = $1")
 delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE match_id = $1")
+
+# ------------------------- SEASONS
+get_seasons = db.prepare("SELECT * FROM seasons")
+get_seasons_matches = db.prepare("SELECT * FROM matches INNER JOIN seasons_matches ON matches.id = seasons_matches.match_id WHERE seasons_matches.season_id = $1")
+get_season_by_id = db.prepare("SELECT * FROM seasons WHERE id = $1")
+get_running_season = db.prepare("SELECT * FROM seasons where running = true LIMIT 1")
+count_running_seasons = db.prepare("SELECT COUNT(*) FROM seasons")
+add_season_match = db.prepare("INSERT INTO seasons_matches (season_id, match_id) VALUES ($1, $2)")
+update_season_match_count = db.prepare("UPDATE seasons SET played_matches = played_matches + 1 WHERE id = $1")
+create_season = db.prepare("INSERT INTO seasons (name, max_time, max_matches, start_time) VALUES ($1, $2, $3, $4) RETURNING id")
+terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2 WHERE id = $1")
 
 
 # ========================= UTILS

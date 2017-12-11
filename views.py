@@ -1,103 +1,116 @@
 # -*- coding: utf-8 -*-
-from flask_restplus import fields
+from flask_restplus.fields import *
+from timedelta import TimeDelta
 
 
 def createViews(api):
     api.model('Message', {
-        'message': fields.String,
-        'value': fields.Integer,
+        'message': String,
+        'value': Integer,
     })
     # ========================= USERS
     api.model('UserMin', {
-        'id': fields.Integer,
-        'pseudo': fields.String,
-        # 'trigram': fields.String,
+        'id': Integer,
+        'pseudo': String,
+        'usual_pseudos': List(String, default=[]),
+        # 'trigram': String,
     })
     api.clone('User', api.models['UserMin'], {
-        'gold_stars': fields.Integer,
-        'silver_stars': fields.Integer,
-        'copper_stars': fields.Integer,
-        'loser_stars': fields.Integer,
-        'is_active': fields.Boolean,
-        'is_admin': fields.Boolean,
-        'usual_pseudos': fields.List(fields.String),
+        'gold_stars': Integer,
+        'silver_stars': Integer,
+        'copper_stars': Integer,
+        'loser_stars': Integer,
+        'is_active': Boolean,
+        'is_admin': Boolean,
     })
 
     # ========================= MATCHES
     api.model('MatchBase', {
-        'id': fields.Integer,
-        'r_score': fields.Integer,
-        'b_score': fields.Integer,
-        'datetime': fields.DateTime(dt_format="rfc822"),
+        'id': Integer,
+        'r_score': Integer,
+        'b_score': Integer,
+        'datetime': DateTime(dt_format="iso8601"),
     })
     api.clone('MatchValid', api.models['MatchBase'], {
-        'validator': fields.Nested(api.models['UserMin'])
+        'validator': Nested(api.models['UserMin'])
     })
     api.clone('MatchPending', api.models['MatchBase'], {
-        'b1_pseudo': fields.String,
-        'b2_pseudo': fields.String,
-        'b3_pseudo': fields.String,
-        'b4_pseudo': fields.String,
-        'b5_pseudo': fields.String,
-        'b6_pseudo': fields.String,
-        'r1_pseudo': fields.String,
-        'r2_pseudo': fields.String,
-        'r3_pseudo': fields.String,
-        'r4_pseudo': fields.String,
-        'r5_pseudo': fields.String,
-        'r6_pseudo': fields.String,
+        'b1_pseudo': String,
+        'b2_pseudo': String,
+        'b3_pseudo': String,
+        'b4_pseudo': String,
+        'b5_pseudo': String,
+        'b6_pseudo': String,
+        'r1_pseudo': String,
+        'r2_pseudo': String,
+        'r3_pseudo': String,
+        'r4_pseudo': String,
+        'r5_pseudo': String,
+        'r6_pseudo': String,
     })
     api.clone('MatchMin', api.models['MatchValid'], {
-        'b1_id': fields.Integer,
-        'b2_id': fields.Integer,
-        'b3_id': fields.Integer,
-        'b4_id': fields.Integer,
-        'b5_id': fields.Integer,
-        'b6_id': fields.Integer,
-        'r1_id': fields.Integer,
-        'r2_id': fields.Integer,
-        'r3_id': fields.Integer,
-        'r4_id': fields.Integer,
-        'r5_id': fields.Integer,
-        'r6_id': fields.Integer,
+        'b1_id': Integer,
+        'b2_id': Integer,
+        'b3_id': Integer,
+        'b4_id': Integer,
+        'b5_id': Integer,
+        'b6_id': Integer,
+        'r1_id': Integer,
+        'r2_id': Integer,
+        'r3_id': Integer,
+        'r4_id': Integer,
+        'r5_id': Integer,
+        'r6_id': Integer,
     })
     api.clone('Match', api.models['MatchValid'], {
-        'b1': fields.Nested(api.models['UserMin']),
-        'b2': fields.Nested(api.models['UserMin']),
-        'b3': fields.Nested(api.models['UserMin']),
-        'b4': fields.Nested(api.models['UserMin']),
-        'b5': fields.Nested(api.models['UserMin']),
-        'b6': fields.Nested(api.models['UserMin']),
-        'r1': fields.Nested(api.models['UserMin']),
-        'r2': fields.Nested(api.models['UserMin']),
-        'r3': fields.Nested(api.models['UserMin']),
-        'r4': fields.Nested(api.models['UserMin']),
-        'r5': fields.Nested(api.models['UserMin']),
-        'r6': fields.Nested(api.models['UserMin']),
+        'b1': Nested(api.models['UserMin']),
+        'b2': Nested(api.models['UserMin']),
+        'b3': Nested(api.models['UserMin']),
+        'b4': Nested(api.models['UserMin']),
+        'b5': Nested(api.models['UserMin']),
+        'b6': Nested(api.models['UserMin']),
+        'r1': Nested(api.models['UserMin']),
+        'r2': Nested(api.models['UserMin']),
+        'r3': Nested(api.models['UserMin']),
+        'r4': Nested(api.models['UserMin']),
+        'r5': Nested(api.models['UserMin']),
+        'r6': Nested(api.models['UserMin']),
     })
 
     # ========================= STATISTICS
     api.model('StatBase', {
-        'id': fields.Integer,
-        'match_id': fields.Integer,
-        'score': fields.Integer,
-        'tags': fields.Integer,
-        'popped': fields.Integer,
-        'grabs': fields.Integer,
-        'drops': fields.Integer,
-        'hold': fields.DateTime(dt_format="rfc822"),
-        'captures': fields.Integer,
-        'prevent': fields.DateTime(dt_format="rfc822"),
-        'returns': fields.Integer,
-        'support': fields.Integer,
-        'pups': fields.Integer,
+        'id': Integer,
+        'match_id': Integer,
+        'score': Integer,
+        'tags': Integer,
+        'popped': Integer,
+        'grabs': Integer,
+        'drops': Integer,
+        'hold': TimeDelta,
+        'captures': Integer,
+        'prevent': TimeDelta,
+        'returns': Integer,
+        'support': Integer,
+        'pups': Integer,
     })
     api.clone('StatPending', api.models['StatBase'], {
-        'user_pseudo': fields.String,
+        'user_pseudo': String,
     })
     api.clone('StatMin', api.models['StatBase'], {
-        'user_id': fields.Integer,
+        'user_id': Integer,
     })
     api.clone('Stat', api.models['StatBase'], {
-        'user': fields.Nested(api.models['UserMin']),
+        'user': Nested(api.models['UserMin']),
+    })
+
+    # ========================= SEASONS
+    api.model('Season', {
+        'id': Integer,
+        'name': String,
+        'start_time': DateTime(dt_format="iso8601"),
+        'end_time': DateTime(dt_format="iso8601"),
+        'max_time': TimeDelta,
+        'played_matches': Integer,
+        'max_matches': Integer,
+        'running': Boolean,
     })

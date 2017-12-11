@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 from flask_restplus import Api, Resource, reqparse, abort
+from flask_restplus.inputs import datetime_from_iso8601
 from flask_sslify import SSLify
 from flask_cors import CORS
 
@@ -8,6 +9,7 @@ import postgresql.exceptions
 import postgresql.types
 
 import email.utils
+import datetime
 
 from views import createViews
 from orm import *
@@ -56,9 +58,9 @@ parser_create_stats.add_argument('tags', type=int, location='form')
 parser_create_stats.add_argument('popped', type=int, location='form')
 parser_create_stats.add_argument('grabs', type=int, location='form')
 parser_create_stats.add_argument('drops', type=int, location='form')
-parser_create_stats.add_argument('hold', type=str, location='form')
+parser_create_stats.add_argument('hold', type=float, location='form')
 parser_create_stats.add_argument('captures', type=int, location='form')
-parser_create_stats.add_argument('prevent', type=str, location='form')
+parser_create_stats.add_argument('prevent', type=float, location='form')
 parser_create_stats.add_argument('returns', type=int, location='form')
 parser_create_stats.add_argument('support', type=int, location='form')
 parser_create_stats.add_argument('pups', type=int, location='form')
@@ -80,6 +82,11 @@ parser_create_match.add_argument('r4_pseudo', type=str, location='form')
 parser_create_match.add_argument('r5_pseudo', type=str, location='form')
 parser_create_match.add_argument('r6_pseudo', type=str, location='form')
 
+parser_create_season = reqparse.RequestParser()
+parser_create_season.add_argument('max_time', type=float, required=True, location='form')
+parser_create_season.add_argument('max_matches', type=int, required=True, location='form')
+parser_create_season.add_argument('name', type=str, required=True, location='form')
+
 
 # ========================= GETTERS
 
@@ -94,10 +101,10 @@ def app():
 
 
 # ========================= NAMESPACE V1
-
 v1 = api.namespace(name="v1", validate=True)
 
 
+# ------------------------- USERS
 @v1.route("/users")
 class Users(Resource):
     @api.marshal_with(api.models['Message'])
@@ -157,6 +164,7 @@ class UserMatches(Resource):
         return matches
 
 
+# ------------------------- MATCHES
 @v1.route("/matches")
 class Matches(Resource):
     @api.marshal_with(api.models['MatchMin'], as_list=True)
@@ -210,7 +218,7 @@ class MatchesPending(Resource):
         args = parser_create_match.parse_args()
         new_match_id = create_pending_match.first(args['b_score'],
                                                   args['r_score'],
-                                                  email.utils.parsedate(args['datetime']),
+                                                  datetime_from_iso8601(args['datetime']),
                                                   args['b1_pseudo'],
                                                   args['b2_pseudo'],
                                                   args['b3_pseudo'],
@@ -239,6 +247,7 @@ class MatchPending(Resource):
         return match
 
     @api.expect(parser_validate_match)
+    @api.marshal_with(api.models['Message'])
     def put(self, match_id):
         def mapper(color):
             for i in range(1, 7):
@@ -286,6 +295,13 @@ class MatchPending(Resource):
                                  stats['pups'])
                 delete_pending_match_stats(match_id)
                 delete_pending_match(match_id)
+                season = to_json(get_running_season.first())
+                if season is not None:
+                    add_season_match(season['id'], new_match_id)
+                    update_season_match_count(season['id'])
+                    if pending_match['datetime'] >= season['start_time'] + season['max_time'] or season['played_matches'] + 1 >= season['max_matches']:
+                        # TODO update stars
+                        terminate_season(season_id, datetime.datetime.now())
         except postgresql.exceptions.ForeignKeyError:
             abort(400, "Inexistent player id.")
         return {
@@ -330,9 +346,9 @@ class MatchPendingStats(Resource):
                                                   args['popped'],
                                                   args['grabs'],
                                                   args['drops'],
-                                                  args['hold'],
+                                                  datetime.timedelta(seconds=args['hold']),
                                                   args['captures'],
-                                                  args['prevent'],
+                                                  datetime.timedelta(seconds=args['prevent']),
                                                   args['returns'],
                                                   args['support'],
                                                   args['pups'])
@@ -342,3 +358,55 @@ class MatchPendingStats(Resource):
             'message': 'Stats created',
             'value': stats_id,
         }
+
+
+# ------------------------- SEASONS
+@v1.route("/seasons")
+class Seasons(Resource):
+    @api.marshal_with(api.models['Season'], as_list=True)
+    def get(self):
+        seasons = to_json(get_seasons())
+        if seasons is None:
+            abort(404, "No seasons found")
+        return seasons
+
+    @api.marshal_with(api.models['Message'])
+    @api.expect(parser_create_season)
+    def post(self):
+        args = parser_create_season.parse_args()
+        count = count_running_seasons.first()
+        if count > 0:
+            abort(400, "A season is already running, please terminate it before creating a new one.")
+        new_season_id = create_season.first(args['name'], datetime.timedelta(seconds=args['max_time']), args['max_matches'], datetime.datetime.now())
+        return {
+            'message': 'New season launched',
+            'values': new_season_id,
+        }
+
+
+@v1.route("/seasons/<int:season_id>")
+class Season(Resource):
+    @api.marshal_with(api.models['Season'])
+    def get(self, season_id):
+        season = to_json(get_season_by_id.first(season_id))
+        if season is None:
+            abort(404, "Season not found")
+        return season
+
+    @api.marshal_with(api.models['Message'])
+    def delete(self, season_id):
+        # TODO : update stars
+        terminate_season(season_id, datetime.datetime.now())
+        return {
+            'message': 'Season finished',
+        }
+
+
+@v1.route("/seasons/<int:season_id>/matches")
+class SeasonMatches(Resource):
+    @api.marshal_with(api.models['MatchMin'], as_list=True)
+    def get(self):
+        matches = to_json(get_season_matches(season_id))
+        if matches is None:
+            abort(404, "Season not found")
+        return matches
