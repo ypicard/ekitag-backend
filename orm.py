@@ -127,7 +127,7 @@ delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE ma
 
 # ------------------------- SEASONS
 get_seasons = db.prepare("SELECT * FROM seasons")
-get_seasons_matches = db.prepare("SELECT * FROM matches INNER JOIN seasons_matches ON matches.id = seasons_matches.match_id WHERE seasons_matches.season_id = $1")
+get_season_matches = db.prepare("SELECT * FROM matches INNER JOIN seasons_matches ON matches.id = seasons_matches.match_id WHERE seasons_matches.season_id = $1")
 get_season_by_id = db.prepare("SELECT * FROM seasons WHERE id = $1")
 get_running_season = db.prepare("SELECT * FROM seasons where running = true LIMIT 1")
 count_running_seasons = db.prepare("SELECT COUNT(*) FROM seasons")

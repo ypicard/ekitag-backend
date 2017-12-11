@@ -405,7 +405,7 @@ class Season(Resource):
 @v1.route("/seasons/<int:season_id>/matches")
 class SeasonMatches(Resource):
     @api.marshal_with(api.models['MatchMin'], as_list=True)
-    def get(self):
+    def get(self, season_id):
         matches = to_json(get_season_matches(season_id))
         if matches is None:
             abort(404, "Season not found")
