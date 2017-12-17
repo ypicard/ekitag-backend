@@ -75,7 +75,7 @@ get_match_by_id = db.prepare(
     "LIMIT 1")
 get_user_matches = db.prepare(
     "SELECT *, "
-    "validator.id as validator$id, validator.pseudo as validator$pseudo "
+    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos "
     "FROM matches "
     "LEFT JOIN users AS validator ON validated_by = validator.id "
     "WHERE "
