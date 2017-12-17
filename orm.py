@@ -8,7 +8,7 @@ import postgresql.types
 
 secret = config.secret()
 db = postgresql.open(secret.get('pg_uri'))
-
+transaction = db.xact
 
 # ========================= SQL COMMANDS
 # You can ask for any existing field, unused fields will be filtered out using view models.
@@ -36,8 +36,10 @@ create_match = db.prepare(
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) "
     "RETURNING id")
 get_matches = db.prepare(
-    "SELECT *, "
-    "validator.id as validator$id, validator.pseudo as validator$pseudo "
+    "SELECT matches.id as id,  r_score, b_score, datetime, "
+    "matches.b1_id, matches.b2_id, matches.b3_id, matches.b4_id, matches.b5_id, matches.b6_id, "
+    "matches.r1_id, matches.r2_id, matches.r3_id, matches.r4_id, matches.r5_id, matches.r6_id, "
+    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos "
     "FROM matches "
     "LEFT JOIN users AS validator ON validated_by = validator.id")
 get_match_by_id = db.prepare(
@@ -134,28 +136,35 @@ delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE ma
 
 # ------------------------- SEASONS
 get_seasons = db.prepare("SELECT * FROM seasons")
-get_season_matches = db.prepare("SELECT * FROM matches INNER JOIN seasons_matches ON matches.id = seasons_matches.match_id WHERE seasons_matches.season_id = $1")
+get_season_matches = db.prepare(
+    "SELECT matches.id as id,  r_score, b_score, datetime, "
+    "matches.b1_id, matches.b2_id, matches.b3_id, matches.b4_id, matches.b5_id, matches.b6_id, "
+    "matches.r1_id, matches.r2_id, matches.r3_id, matches.r4_id, matches.r5_id, matches.r6_id, "
+    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos "
+    "FROM matches "
+    "LEFT JOIN users AS validator ON validated_by = validator.id "
+    "INNER JOIN seasons_matches ON matches.id = seasons_matches.match_id WHERE seasons_matches.season_id = $1")
 get_season_by_id = db.prepare("SELECT * FROM seasons WHERE id = $1")
 get_running_season = db.prepare("SELECT * FROM seasons where running = true LIMIT 1")
-count_running_seasons = db.prepare("SELECT COUNT(*) FROM seasons")
+count_running_seasons = db.prepare("SELECT COUNT(*) FROM seasons WHERE running = true")
 add_season_match = db.prepare("INSERT INTO seasons_matches (season_id, match_id) VALUES ($1, $2)")
 update_season_match_count = db.prepare("UPDATE seasons SET played_matches = played_matches + 1 WHERE id = $1")
 create_season = db.prepare("INSERT INTO seasons (name, max_time, max_matches, start_time) VALUES ($1, $2, $3, $4) RETURNING id")
 terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2 WHERE id = $1")
 
 # ------------------------- µσ-ranking
-create_user_team_musigma = db.prepare("INSERT INTO musigma_team (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
-create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
-get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
-get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
-update_user_team_musigma = db.prepare("UPDATE musigma_team SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
-update_user_team_global_musigma = lambda user_id, mu, sigma: update_user_team_musigma(user_id, None, mu, sigma)
-create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
-create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
-get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
-get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
-update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
-update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
+# create_user_team_musigma = db.prepare("INSERT INTO musigma_team (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
+# create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
+# get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
+# get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
+# update_user_team_musigma = db.prepare("UPDATE musigma_team SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
+# update_user_team_global_musigma = lambda user_id, mu, sigma: update_user_team_musigma(user_id, None, mu, sigma)
+# create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
+# create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
+# get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
+# get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
+# update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
+# update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
 
 
 # ========================= UTILS
