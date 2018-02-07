@@ -1,7 +1,10 @@
 #virtual env
 /venv
+ekitag-backend
 
 # System Files
 .DS_Store
 Thumbs.db
 secret.yml
+
+__pycache__

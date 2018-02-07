@@ -17,6 +17,7 @@ def createViews(api):
         'id': Integer,
         'pseudo': String,
         'usual_pseudos': List(String, default=[]),
+        'is_active': Boolean
         # 'trigram': String,
     })
     api.clone('User', api.models['UserMin'], {

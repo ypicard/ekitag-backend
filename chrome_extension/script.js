@@ -7,20 +7,53 @@ playerStats[0].remove();
 playerStats[0].remove();
 playerStats = [].slice.call(playerStats);
 
-var final = {
-  score: {
-    red: 0,
-    blue: 0,
-  },
-  players: [],
-};
+var matchData = {
+  "r_score": 0,
+  "b_score": 0,
+  "b1_pseudo": null,
+  "b2_pseudo": null,
+  "b3_pseudo": null,
+  "b4_pseudo": null,
+  "b5_pseudo": null,
+  "b6_pseudo": null,
+  "r1_pseudo": null,
+  "r2_pseudo": null,
+  "r3_pseudo": null,
+  "r4_pseudo": null,
+  "r5_pseudo": null,
+  "r6_pseudo": null,
+}
+var playersStats = [];
+
+
 
 // Get each player's stats
+var blueIndex = 0;
+var redIndex = 0;
+var redScore = 0;
+var blueScore = 0;
 playerStats.forEach(function(player) {
+
   var playerCells = [].slice.call(player.cells);
-  var playerObj = {
-    name: playerCells[0].getElementsByTagName('span')[1].innerHTML,
-    team: playerCells[0].getElementsByTagName('span')[1].className.split(' ')[1].split('-')[1],
+
+  // Build match object
+  var pseudo = playerCells[0].getElementsByTagName('span')[1].innerHTML;
+  var playerTeam = playerCells[0].getElementsByTagName('span')[1].className.split(' ')[1].split('-')[1]
+
+  if (playerTeam == 'red') {
+    redIndex += 1;
+    matchData['r' + redIndex + '_pseudo'] = pseudo;
+    matchData['r_score'] += playerCells[7].innerHTML
+  } else if (playerTeam == 'blue') {
+    blueIndex += 1;
+    matchData['b' + redIndex + '_pseudo'] = pseudo;
+    matchData['b_score'] += playerCells[7].innerHTML
+  }
+
+  // Build player stats object
+  // match_id: null, // TODO
+  var playerStats = {
+    user_pseudo: pseudo,
     score: playerCells[1].innerHTML,
     tags: playerCells[2].innerHTML,
     popped: playerCells[3].innerHTML,
@@ -31,33 +64,57 @@ playerStats.forEach(function(player) {
     prevent: playerCells[8].innerHTML,
     returns: playerCells[9].innerHTML,
     support: playerCells[10].innerHTML,
-    powerups: playerCells[11].innerHTML,
+    pups: playerCells[11].innerHTML,
   };
 
-  final.score[playerObj.team] += parseInt(playerObj.captures);
-
-  final.players.push(playerObj);
-
+  playersStats.push(playerStats);
 });
 
 var msg = "Content scrapped :\n"
-msg += 'SCORE :\n RED ' + final.score.red + ' - BLUE : ' + final.score.blue
+msg += 'SCORE :\n RED ' + matchData.r_score + ' - BLUE : ' + matchData.b_score
 msg += '\nPLAYERS :'
-final.players.forEach(function(player) {
-  msg += '\n' + player.name;
+playersStats.forEach(function(player) {
+  msg += '\n' + player.pseudo;
 });
 alert(msg);
 
-var request = new XMLHttpRequest();
-// Handle response 
-request.onload = function() {
-  var status = request.status;
+// Convert matchData to FormData for post request
+var matchFormData = new FormData();
+for (var key in matchData) {
+  matchFormData.append(key, matchData[key]);
+}
 
-  var data = request.responseText;
-  console.log('Response status : ', status);
+// BUILD MATCH REQUEST
+var matchDataRequest = new XMLHttpRequest();
+matchDataRequest.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    console.log(this);
+    // Now send players stats
+    // Same for playersStats
+    var statsRequest = new XMLHttpRequest();
+
+    var statsFormData = new FormData();
+    statsFormData.append('match_id', 1); // TODO : TAKE MATCH ID FROM PREV RESPONSE
+    for (var key in playersStats) {
+      statsFormData.append(key, playersStats[key]);
+    }
+
+    // Stats request callback
+    statsFormData.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        alert('I SUPPOSE SUCCESS');
+        console.log(this);
+      }
+    };
+
+    // Send second request
+    // TODO : ADD ID BELOW
+    statsRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/' + 1 + '/pending/', true);
+    statsRequest.send(statsFormData);
+  }
 };
 
 console.log('Sending request...');
-request.open('POST', 'http://www.google.com/', true);
-request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-request.send(JSON.stringify(final));
+matchDataRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending/', true);
+// matchDataRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+matchDataRequest.send(matchFormData);
