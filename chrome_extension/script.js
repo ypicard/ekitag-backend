@@ -1,13 +1,11 @@
-alert('start script.js');
-
+console.log('Starting parsing...')
 var playerStats = document.getElementById("stats").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-console.log(playerStats)
 // Remove useless rows
 playerStats[0].remove();
-// playerStats[0].remove();
+
 playerStats = [].slice.call(playerStats);
-console.log(playerStats)
 var matchData = {
+  "datetime": new Date().toISOString(),
   "r_score": 0,
   "b_score": 0,
   "b1_pseudo": null,
@@ -23,48 +21,47 @@ var matchData = {
   "r5_pseudo": null,
   "r6_pseudo": null,
 }
+
 var playersStats = [];
-
-
-
 // Get each player's stats
 var blueIndex = 0;
 var redIndex = 0;
 var redScore = 0;
 var blueScore = 0;
-playerStats.forEach(function(player) {
+playerStats.forEach(function (player) {
 
   var playerCells = [].slice.call(player.cells);
-
   // Build match object
   var pseudo = playerCells[0].getElementsByTagName('span')[1].innerHTML;
-  var playerTeam = playerCells[0].getElementsByTagName('span')[1].className.split(' ')[1].split('-')[1]
+  var playerTeam = playerCells[0].getElementsByTagName('span')[1].className.split(' ')[1].split('-')[
+    1]
 
   if (playerTeam == 'red') {
     redIndex += 1;
     matchData['r' + redIndex + '_pseudo'] = pseudo;
-    matchData['r_score'] += playerCells[7].innerHTML
+    matchData['r_score'] += Number(playerCells[7].innerHTML)
   } else if (playerTeam == 'blue') {
     blueIndex += 1;
-    matchData['b' + redIndex + '_pseudo'] = pseudo;
-    matchData['b_score'] += playerCells[7].innerHTML
+    matchData['b' + blueIndex + '_pseudo'] = pseudo;
+    matchData['b_score'] += Number(playerCells[7].innerHTML)
   }
 
   // Build player stats object
-  // match_id: null, // TODO
   var playerStats = {
     user_pseudo: pseudo,
-    score: playerCells[1].innerHTML,
-    tags: playerCells[2].innerHTML,
-    popped: playerCells[3].innerHTML,
-    grabs: playerCells[4].innerHTML,
-    drops: playerCells[5].innerHTML,
-    hold: playerCells[6].innerHTML,
-    captures: playerCells[7].innerHTML,
-    prevent: playerCells[8].innerHTML,
-    returns: playerCells[9].innerHTML,
-    support: playerCells[10].innerHTML,
-    pups: playerCells[11].innerHTML,
+    score: Number(playerCells[1].innerHTML),
+    tags: Number(playerCells[2].innerHTML),
+    popped: Number(playerCells[3].innerHTML),
+    grabs: Number(playerCells[4].innerHTML),
+    drops: Number(playerCells[5].innerHTML),
+    hold: Number(playerCells[6].innerHTML.split(':')[0]) * 60 + Number(playerCells[6].innerHTML
+      .split(':')[1]),
+    captures: Number(playerCells[7].innerHTML),
+    prevent: Number(playerCells[8].innerHTML.split(':')[0]) * 60 + Number(playerCells[8].innerHTML
+      .split(':')[1]),
+    returns: Number(playerCells[9].innerHTML),
+    support: Number(playerCells[10].innerHTML),
+    pups: Number(playerCells[11].innerHTML),
   };
 
   playersStats.push(playerStats);
@@ -73,8 +70,8 @@ playerStats.forEach(function(player) {
 var msg = "Content scrapped :\n"
 msg += 'SCORE :\n RED ' + matchData.r_score + ' - BLUE : ' + matchData.b_score
 msg += '\nPLAYERS :'
-playersStats.forEach(function(player) {
-  msg += '\n' + player.pseudo;
+playersStats.forEach(function (player) {
+  msg += '\n' + player.user_pseudo;
 });
 alert(msg);
 
@@ -86,34 +83,39 @@ for (var key in matchData) {
 
 // BUILD MATCH REQUEST
 var matchDataRequest = new XMLHttpRequest();
-matchDataRequest.onreadystatechange = function() {
+console.log('Sending request...');
+matchDataRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending', true);
+// matchDataRequest.open('POST', 'http://127.0.0.1:5000/v1/matches/pending', true);
+matchDataRequest.onreadystatechange = function () {
   if (this.readyState == 4 && this.status == 200) {
-    console.log(this);
-    // Now send players stats
-    var statsRequest = new XMLHttpRequest();
+    var response = JSON.parse(matchDataRequest.response)
+    var matchId = response.value;
 
-    var statsFormData = new FormData();
-    statsFormData.append('match_id', 1); // TODO : TAKE MATCH ID FROM PREV RESPONSE
-    for (var key in playersStats) {
-      statsFormData.append(key, playersStats[key]);
-    }
+    // Send one request per player stats
+    var confirmedPlayers = 0;
+    playersStats.forEach(function (player) {
 
-    // Stats request callback
-    statsFormData.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        alert('I SUPPOSE SUCCESS');
-        console.log(this);
+      var statsFormData = new FormData();
+      for (var key in player) {
+        statsFormData.append(key, player[key]);
       }
-    };
 
-    // Send second request
-    // TODO : ADD ID BELOW
-    statsRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/' + 1 + '/pending/', true);
-    statsRequest.send(statsFormData);
+      var statRequest = new XMLHttpRequest();
+      statRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending/' + matchId + '/stats', true);
+      // statRequest.open('POST', 'http://127.0.0.1:5000/v1/matches/pending/' + matchId + '/stats', true);
+      statRequest.onreadystatechange = function () {
+
+        if (this.readyState == 4 && this.status == 200) {
+          confirmedPlayers += 1;
+          if (confirmedPlayers == playerStats.length) {
+            alert("Succesfully sent match !")
+          }
+        }
+      }
+      statRequest.send(statsFormData);
+    })
+
   }
 };
-
-console.log('Sending request...');
-matchDataRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending/', true);
 // matchDataRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 matchDataRequest.send(matchFormData);
