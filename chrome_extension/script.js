@@ -1,12 +1,12 @@
 alert('start script.js');
 
-var playerStats = document.getElementById("stats").getElementsByTagName('tr');
-
+var playerStats = document.getElementById("stats").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+console.log(playerStats)
 // Remove useless rows
 playerStats[0].remove();
-playerStats[0].remove();
+// playerStats[0].remove();
 playerStats = [].slice.call(playerStats);
-
+console.log(playerStats)
 var matchData = {
   "r_score": 0,
   "b_score": 0,
@@ -90,7 +90,6 @@ matchDataRequest.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     console.log(this);
     // Now send players stats
-    // Same for playersStats
     var statsRequest = new XMLHttpRequest();
 
     var statsFormData = new FormData();
