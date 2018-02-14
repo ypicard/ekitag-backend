@@ -21,6 +21,7 @@ update_user = db.prepare("UPDATE users SET pseudo = $2, usual_pseudos = $3 WHERE
 get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
+get_user_by_pseudo = db.prepare("SELECT id FROM USERS WHERE $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1;")
 
 # ------------------------- ADMIN
 promote_user = db.prepare("UPDATE users SET is_admin = true, password = crypt($2, gen_salt('bf')) WHERE id = $1")
@@ -178,7 +179,7 @@ def to_dic(row):
 
 # UNMANGLER
 # we mangle 'joins' name and nested data with $ in SQl 'AS'.
-# This function recursively nest data according to this.
+# This function recursively nests data according to this.
 def unmangle(row):
     for key in list(row.keys()):
         index = key.find('$')

@@ -171,10 +171,9 @@ class MatchPending(Resource):
     @api.expect(parser_validate_match)
     @api.marshal_with(api.models['Message'])
     @api.doc(security='admin')
-    @admin_required
+    # @admin_required
     def put(self, match_id):
-        args = parser_validate_match.parse_args()
-        return matchespending.convert(match_id, validator=get_jwt_identity(), **args)
+        return matchespending.convert(match_id, validator=get_jwt_identity())
 
     @api.marshal_with(api.models['Message'])
     @api.doc(security='admin')

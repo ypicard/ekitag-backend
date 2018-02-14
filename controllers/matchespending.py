@@ -40,17 +40,42 @@ def create(b_score, r_score, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseud
     }
 
 
-def convert(match_id, validator, b1_id=None, b2_id=None, b3_id=None, b4_id=None, b5_id=None, b6_id=None, r1_id=None, r2_id=None, r3_id=None, r4_id=None, r5_id=None, r6_id=None):
-    def mapper(color):
-        for i in range(1, 7):
-            pseudo_id_map[pending_match[color + str(i) + "_pseudo"]] = locals().get(color + str(i) + "_id")
+def convert(match_id, validator):
+   
     pending_match = orm.to_json(orm.get_pending_match_by_id.first(match_id))
     pending_stats = orm.to_json(orm.get_pending_match_stats(match_id))
+
     if pending_match is None:
         abort(404, "Pending match not found")
+
+    # lol
+    b1_id = orm.get_user_by_pseudo.first(pending_match['b1_pseudo'])
+    b2_id = orm.get_user_by_pseudo.first(pending_match['b2_pseudo'])
+    b3_id = orm.get_user_by_pseudo.first(pending_match['b3_pseudo'])
+    b4_id = orm.get_user_by_pseudo.first(pending_match['b4_pseudo'])
+    b5_id = orm.get_user_by_pseudo.first(pending_match['b5_pseudo'])
+    b6_id = orm.get_user_by_pseudo.first(pending_match['b6_pseudo'])
+    r1_id = orm.get_user_by_pseudo.first(pending_match['r1_pseudo'])
+    r2_id = orm.get_user_by_pseudo.first(pending_match['r2_pseudo'])
+    r3_id = orm.get_user_by_pseudo.first(pending_match['r3_pseudo'])
+    r4_id = orm.get_user_by_pseudo.first(pending_match['r4_pseudo'])
+    r5_id = orm.get_user_by_pseudo.first(pending_match['r5_pseudo'])
+    r6_id = orm.get_user_by_pseudo.first(pending_match['r6_pseudo'])
+
     pseudo_id_map = {}
-    mapper('r')
-    mapper('b')
+    pseudo_id_map[pending_match['b1_pseudo']] = str(b1_id)
+    pseudo_id_map[pending_match['b2_pseudo']] = str(b2_id)
+    pseudo_id_map[pending_match['b3_pseudo']] = str(b3_id)
+    pseudo_id_map[pending_match['b4_pseudo']] = str(b4_id)
+    pseudo_id_map[pending_match['b5_pseudo']] = str(b5_id)
+    pseudo_id_map[pending_match['b6_pseudo']] = str(b6_id)
+    pseudo_id_map[pending_match['r1_pseudo']] = str(r1_id)
+    pseudo_id_map[pending_match['r2_pseudo']] = str(r2_id)
+    pseudo_id_map[pending_match['r3_pseudo']] = str(r3_id)
+    pseudo_id_map[pending_match['r4_pseudo']] = str(r4_id)
+    pseudo_id_map[pending_match['r5_pseudo']] = str(r5_id)
+    pseudo_id_map[pending_match['r6_pseudo']] = str(r6_id)
+
     new_match_id = None
     try:
         with orm.transaction():
@@ -70,7 +95,11 @@ def convert(match_id, validator, b1_id=None, b2_id=None, b3_id=None, b4_id=None,
                                                      r5_id,
                                                      r6_id,
                                                      validator)['value']
+            print(new_match_id)
             for stats in pending_stats:
+                print(stats)
+                print(pseudo_id_map[stats['user_pseudo']])
+                # THIS DOES NOT WORK: foreign key problem
                 matches_stats_controller.create(new_match_id,
                                                 pseudo_id_map[stats['user_pseudo']],
                                                 stats['score'],
@@ -84,6 +113,7 @@ def convert(match_id, validator, b1_id=None, b2_id=None, b3_id=None, b4_id=None,
                                                 stats['returns'],
                                                 stats['support'],
                                                 stats['pups'])
+
             matchespending_stats_controller.delete_all(new_match_id)
             delete(match_id)
             season = seasons_controller.show_current()
