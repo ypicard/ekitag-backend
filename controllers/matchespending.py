@@ -63,18 +63,18 @@ def convert(match_id, validator):
     r6_id = orm.get_user_by_pseudo.first(pending_match['r6_pseudo'])
 
     pseudo_id_map = {}
-    pseudo_id_map[pending_match['b1_pseudo']] = str(b1_id)
-    pseudo_id_map[pending_match['b2_pseudo']] = str(b2_id)
-    pseudo_id_map[pending_match['b3_pseudo']] = str(b3_id)
-    pseudo_id_map[pending_match['b4_pseudo']] = str(b4_id)
-    pseudo_id_map[pending_match['b5_pseudo']] = str(b5_id)
-    pseudo_id_map[pending_match['b6_pseudo']] = str(b6_id)
-    pseudo_id_map[pending_match['r1_pseudo']] = str(r1_id)
-    pseudo_id_map[pending_match['r2_pseudo']] = str(r2_id)
-    pseudo_id_map[pending_match['r3_pseudo']] = str(r3_id)
-    pseudo_id_map[pending_match['r4_pseudo']] = str(r4_id)
-    pseudo_id_map[pending_match['r5_pseudo']] = str(r5_id)
-    pseudo_id_map[pending_match['r6_pseudo']] = str(r6_id)
+    pseudo_id_map[pending_match['b1_pseudo']] = b1_id
+    pseudo_id_map[pending_match['b2_pseudo']] = b2_id
+    pseudo_id_map[pending_match['b3_pseudo']] = b3_id
+    pseudo_id_map[pending_match['b4_pseudo']] = b4_id
+    pseudo_id_map[pending_match['b5_pseudo']] = b5_id
+    pseudo_id_map[pending_match['b6_pseudo']] = b6_id
+    pseudo_id_map[pending_match['r1_pseudo']] = r1_id
+    pseudo_id_map[pending_match['r2_pseudo']] = r2_id
+    pseudo_id_map[pending_match['r3_pseudo']] = r3_id
+    pseudo_id_map[pending_match['r4_pseudo']] = r4_id
+    pseudo_id_map[pending_match['r5_pseudo']] = r5_id
+    pseudo_id_map[pending_match['r6_pseudo']] = r6_id
 
     new_match_id = None
     try:
@@ -95,11 +95,8 @@ def convert(match_id, validator):
                                                      r5_id,
                                                      r6_id,
                                                      validator)['value']
-            print(new_match_id)
+
             for stats in pending_stats:
-                print(stats)
-                print(pseudo_id_map[stats['user_pseudo']])
-                # THIS DOES NOT WORK: foreign key problem
                 matches_stats_controller.create(new_match_id,
                                                 pseudo_id_map[stats['user_pseudo']],
                                                 stats['score'],

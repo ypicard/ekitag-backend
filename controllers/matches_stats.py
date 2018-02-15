@@ -15,7 +15,7 @@ def index(match_id):
 
 def create(match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups):
     try:
-        stats_id = orm.create_pending_stats.first(match_id,
+        stats_id = orm.create_stats.first(match_id,
                                                 user_id,
                                                 score,
                                                 tags,
