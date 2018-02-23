@@ -214,7 +214,6 @@ class Seasons(Resource):
         args['max_time'] = datetime.timedelta(seconds=args['max_time'])
         return seasons.create(**args)
 
-
 @v1.route("/seasons/<int:season_id>")
 class Season(Resource):
     @api.marshal_with(api.models['Season'])
