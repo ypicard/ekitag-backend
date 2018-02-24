@@ -15,6 +15,7 @@ def index():
 
 
 def create(trigram, pseudo):
+    trigram = trigram.lower() # Always lowercase trigram
     try:
         user_id = orm.create_user.first(trigram, pseudo)
         user_mstg_id = orm.create_user_musigma_team_global.first(user_id, config_mstg.get('mu'), config_mstg.get('sigma'))
