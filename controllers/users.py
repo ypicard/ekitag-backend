@@ -3,7 +3,9 @@
 import orm
 from flask_restplus import abort
 import postgresql.exceptions
+from config import musigma_team_global
 
+config_mstg = musigma_team_global()
 
 def index():
     users = orm.to_json(orm.get_users())
@@ -15,6 +17,7 @@ def index():
 def create(trigram, pseudo):
     try:
         user_id = orm.create_user.first(trigram, pseudo)
+        user_mstg_id = orm.create_user_musigma_team_global.first(user_id, config_mstg.get('mu'), config_mstg.get('sigma'))
     except postgresql.exceptions.UniqueError:
         abort(400, "Duplicated user")
     return {

@@ -25,5 +25,5 @@ def secret():
     return self.__config['DEFAULT']
 
 
-def musigma():
-    return self.__config['MUSIGMA']
+def musigma_team_global():
+    return self.__config['MUSIGMA_TEAM_GLOBAL']
