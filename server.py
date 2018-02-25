@@ -192,8 +192,10 @@ class MatchPendingStats(Resource):
     @api.expect(parser_create_stats)
     def post(self, match_id):
         args = parser_create_stats.parse_args()
-        args['hold'] = datetime.timedelta(seconds=args['hold'])
-        args['prevent'] = datetime.timedelta(seconds=args['prevent'])
+        if args['hold']:
+            args['hold'] = datetime.timedelta(seconds=args['hold'])
+        if args['prevent']:
+            args['prevent'] = datetime.timedelta(seconds=args['prevent'])
         
         return matchespending_stats.create(match_id, **args)
 
