@@ -27,3 +27,6 @@ def secret():
 
 def musigma_team_global():
     return self.__config['MUSIGMA_TEAM_GLOBAL']
+
+def musigma_team_season():
+    return self.__config['MUSIGMA_TEAM_SEASON']

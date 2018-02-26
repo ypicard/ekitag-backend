@@ -3,9 +3,10 @@
 import orm
 from flask_restplus import abort
 import postgresql.exceptions
-from config import musigma_team_global
+from config import musigma_team_global, musigma_team_season
 
-config_mstg = musigma_team_global()
+config_tg = musigma_team_global()
+config_ts = musigma_team_season()
 
 def index():
     users = orm.to_json(orm.get_users())
@@ -18,7 +19,10 @@ def create(trigram, pseudo):
     trigram = trigram.lower() # Always lowercase trigram
     try:
         user_id = orm.create_user.first(trigram, pseudo)
-        user_mstg_id = orm.create_user_musigma_team_global.first(user_id, config_mstg.get('mu'), config_mstg.get('sigma'))
+        # user_tg_id = orm.create_user_musigma_team.first(user_id, config_tg.get('mu'), config_tg.get('sigma'), None)
+        # season = orm.to_json(orm.get_running_season.first())
+        # if season:
+        #     user_ts_id = orm.create_user_musigma_team.first(user_id, config_tg.get('mu'), config_tg.get('sigma'), season['id'])
     except postgresql.exceptions.UniqueError:
         abort(400, "Duplicated user")
     return {
