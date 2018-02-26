@@ -7,6 +7,7 @@ from . import matchespending_stats as matchespending_stats_controller
 from . import seasons as seasons_controller
 from . import seasons_matches as seasons_matches_controller
 from flask_restplus import abort
+import musigma_team_global
 # from flask_jwt_extended import create_access_token
 import postgresql.exceptions
 
@@ -116,6 +117,11 @@ def convert(match_id, validator):
             season = seasons_controller.show_current()
             if season is not None:
                 seasons_matches_controller.create(season['id'], new_match_id)
+            # Update algo
+            musigma_team_global.update([r1_id, r2_id, r3_id, r4_id, r5_id, r6_id], 
+                                        [b1_id, b2_id, b3_id, b4_id, b5_id, b6_id],
+                                         pending_match['r_score'],
+                                         pending_match['b_score'])
     except postgresql.exceptions.ForeignKeyError:
         abort(400, "Something failed. Confident in all user ids ?")
     return {

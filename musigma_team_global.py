@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from trueskill import TrueSkill, Rating
+from trueskill import TrueSkill, Rating, rate
 from config import musigma_team_global
 import itertools
 import orm
+from flask_restplus import abort
 
 config_mstg = musigma_team_global()
 musigma_team_global = TrueSkill(mu=str(config_mstg.get('mu')),
@@ -14,15 +15,18 @@ musigma_team_global = TrueSkill(mu=str(config_mstg.get('mu')),
                          backend='mpmath')
 
 def update(r_ids, b_ids, r_score, b_score):
-    reds = [orm.get_user_musigma_team_global_from_id(id) for id in r_ids]
-    reds = [r for r in reds if r != []]
-    blues = [orm.get_user_musigma_team_global_from_id(id) for id in b_ids]
-    blues = [b for b in blues if b != []]
-    if (len(reds + blues) != len(r_ids + b_ids)):
+    r_ids = [r for r in r_ids if r]
+    b_ids = [b for b in b_ids if b]
+    reds = [orm.to_json(orm.get_user_musigma_team_global_from_id.first(id)) for id in r_ids]
+    reds = [r for r in reds if r]
+    blues = [orm.to_json(orm.get_user_musigma_team_global_from_id.first(id)) for id in b_ids]
+    blues = [b for b in blues if b]
+  
+    if len(reds + blues) != len(r_ids + b_ids):
         abort(500, 'Not all players exist in musigma_team_global table')
-    r_rates = [Rating(r.mu, r.sigma) for r in reds]
-    b_rates = [Rating(b.mu, b.sigma) for b in blues]
-    new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[r_score, b_score])
+    r_rates = [Rating(float(r['mu']), float(r['sigma'])) for r in reds]
+    b_rates = [Rating(float(b['mu']), float(b['sigma'])) for b in blues]
+    new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[b_score, r_score]) # Lower is better
 
     for idx, id in enumerate(r_ids):
         orm.update_user_musigma_team_global(id, new_r_rates[idx].mu, new_r_rates[idx].sigma)
@@ -32,7 +36,7 @@ def update(r_ids, b_ids, r_score, b_score):
 
 def get_next_match(ids):
     players = orm.get_users_musigma_team_global_from_ids(ids)
-    rates = [Rating(p.mu, p.sigma) for p in players]
+    rates = [Rating(p['mu'], p['sigma']) for p in players]
     matches = get_all_possible_matches(ids)
     qualities = [rate(m) for m in matches]
     _, idx = min((_, idx) for (idx, _) in enumerate(qualities))
@@ -48,8 +52,3 @@ def get_all_possible_matches(ids):
             if not any(p in t1 for p in t2):
                 matches.append((t1, t2))
     return matches
-
-
-r_ids = [9, 12]
-b_ids = [11, 13]
-update(r_ids, b_ids, 1, 0)
