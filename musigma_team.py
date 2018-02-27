@@ -7,19 +7,19 @@ import orm
 from flask_restplus import abort
 
 config_tg = musigma_team_global()
-musigma_team_global = TrueSkill(mu=str(config_tg.get('mu')),
-                         sigma=str(config_tg.get('sigma')),
-                         beta=str(config_tg.get('beta')),
-                         tau=str(config_tg.get('tau')),
-                         draw_probability=str(config_tg.get('epsilon')),
+musigma_team_global = TrueSkill(mu=float(config_tg.get('mu')),
+                         sigma=float(config_tg.get('sigma')),
+                         beta=float(config_tg.get('beta')),
+                         tau=float(config_tg.get('tau')),
+                        #  draw_probability=float(config_tg.get('epsilon')),
                          backend='mpmath')
 
 config_ts = musigma_team_season()
-musigma_team_season = TrueSkill(mu=str(config_ts.get('mu')),
-                         sigma=str(config_ts.get('sigma')),
-                         beta=str(config_ts.get('beta')),
-                         tau=str(config_ts.get('tau')),
-                         draw_probability=str(config_ts.get('epsilon')),
+musigma_team_season = TrueSkill(mu=float(config_ts.get('mu')),
+                         sigma=float(config_ts.get('sigma')),
+                         beta=float(config_ts.get('beta')),
+                         tau=float(config_ts.get('tau')),
+                        #  draw_probability=float(config_ts.get('epsilon')),
                          backend='mpmath')
 
 configs = {'global': musigma_team_global,
@@ -33,31 +33,33 @@ def get_trueskill_env(name):
 
 def update(r_ids, b_ids, r_score, b_score, season_id):
 
-    def get_create_users(ids):
+    def get_rates(ids):
         # Get musigma user / create it if none
-        ids = [id for id in ids if id is not None]
         res = []
         for id in ids:
-            pl = orm.to_json(orm.upsert_user_musigma_team.first(id, float(env.mu), float(env.sigma), season_id))
-            res.append(pl)
+            pl = orm.to_json(orm.get_user_musigma_team.first(id, season_id))
+            if pl is not None:
+                res.append(Rating(float(pl['mu']), float(pl['sigma'])))
+            else:
+                res.append(Rating())
         return res
 
     env_name = 'global' if not season_id else 'season'
     set_trueskill_env(env_name)
     env = get_trueskill_env(env_name)
 
-    reds = get_create_users(r_ids)
-    blues = get_create_users(b_ids)
+    r_ids = [id for id in r_ids if id is not None]
+    b_ids = [id for id in b_ids if id is not None]
 
-    # PB HERE: str or float cast causes pb
-    r_rates = [Rating(float(r['mu']), float(r['sigma'])) for r in reds]
-    b_rates = [Rating(float(b['mu']), float(b['sigma'])) for b in blues]
+    r_rates = get_rates(r_ids)
+    b_rates = get_rates(b_ids)
+
     new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[b_score, r_score]) # Lower is better
 
     for idx, id in enumerate(r_ids):
-        orm.update_user_musigma_team(id, new_r_rates[idx].mu, new_r_rates[idx].sigma, season_id)
+        orm.upsert_user_musigma_team(id, new_r_rates[idx].mu, new_r_rates[idx].sigma, season_id)
     for idx, id in enumerate(b_ids):
-        orm.update_user_musigma_team(id, new_b_rates[idx].mu, new_b_rates[idx].sigma, season_id)
+        orm.upsert_user_musigma_team(id, new_b_rates[idx].mu, new_b_rates[idx].sigma, season_id)
 
 
 def get_next_match(ids):
