@@ -9,3 +9,4 @@ Thumbs.db
 secret.yml
 
 __pycache__
+controllers/__pycache__
