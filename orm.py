@@ -37,12 +37,18 @@ create_match = db.prepare(
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) "
     "RETURNING id")
 get_matches = db.prepare(
-    "SELECT matches.id as id,  r_score, b_score, datetime, "
+    "SELECT matches.id AS id,  matches.r_score, matches.b_score, matches.datetime,"
     "matches.b1_id, matches.b2_id, matches.b3_id, matches.b4_id, matches.b5_id, matches.b6_id, "
-    "matches.r1_id, matches.r2_id, matches.r3_id, matches.r4_id, matches.r5_id, matches.r6_id, "
-    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos "
+    "matches.r1_id, matches.r2_id, matches.r3_id, matches.r4_id, matches.r5_id, matches.r6_id,"
+    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos, "
+    "season.id as season$id, season.name as season$name "
     "FROM matches "
-    "LEFT JOIN users AS validator ON validated_by = validator.id")
+    "LEFT JOIN users AS validator "
+    "ON validated_by = validator.id "
+    "LEFT JOIN seasons_matches "
+    "ON matches.id = seasons_matches.match_id "
+    "LEFT JOIN seasons AS season "
+    "ON season.id = seasons_matches.season_id")
 get_match_by_id = db.prepare(
     "SELECT matches.id as id, r_score, b_score, datetime, "
     "b1.id as b1$id, b1.pseudo as b1$pseudo, "
@@ -57,7 +63,8 @@ get_match_by_id = db.prepare(
     "r4.id as r4$id, r4.pseudo as r4$pseudo, "
     "r5.id as r5$id, r5.pseudo as r5$pseudo, "
     "r6.id as r6$id, r6.pseudo as r6$pseudo, "
-    "validator.id as validator$id, validator.pseudo as validator$pseudo "
+    "validator.id as validator$id, validator.pseudo as validator$pseudo, "
+    "season.id as season$id, season.name as season$name "
     "FROM matches "
     "LEFT JOIN users AS b1 ON b1_id = b1.id "
     "LEFT JOIN users AS b2 ON b2_id = b2.id "
@@ -72,6 +79,8 @@ get_match_by_id = db.prepare(
     "LEFT JOIN users AS r5 ON r5_id = r5.id "
     "LEFT JOIN users AS r6 ON r6_id = r6.id "
     "LEFT JOIN users AS validator ON validated_by = validator.id "
+    "LEFT JOIN seasons_matches ON seasons_matches.match_id = matches.id "
+    "LEFT JOIN seasons AS season ON season.id = seasons_matches.season_id "
     "WHERE matches.id = $1 "
     "LIMIT 1")
 get_user_matches = db.prepare(

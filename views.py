@@ -28,7 +28,22 @@ def createViews(api):
         'is_active': Boolean,
         'is_admin': Boolean,
     })
-
+    # ========================= SEASONS
+    api.model('SeasonMin', {
+        'id': Integer,
+        'name': String,
+        'running': Boolean,
+    })
+    api.model('Season', {
+        'id': Integer,
+        'name': String,
+        'start_time': DateTime(dt_format="iso8601"),
+        'end_time': DateTime(dt_format="iso8601"),
+        'max_time': TimeDelta,
+        'played_matches': Integer,
+        'max_matches': Integer,
+        'running': Boolean,
+    })
     # ========================= MATCHES
     api.model('MatchBase', {
         'id': Integer,
@@ -53,6 +68,7 @@ def createViews(api):
         'r5_pseudo': String,
         'r6_pseudo': String,
     })
+    # FFS: do only one model here
     api.clone('MatchMin', api.models['MatchValid'], {
         'b1_id': Integer,
         'b2_id': Integer,
@@ -66,6 +82,7 @@ def createViews(api):
         'r4_id': Integer,
         'r5_id': Integer,
         'r6_id': Integer,
+        'season': Nested(api.models['SeasonMin'])
     })
     api.clone('Match', api.models['MatchValid'], {
         'b1': Nested(api.models['UserMin']),
@@ -80,6 +97,7 @@ def createViews(api):
         'r4': Nested(api.models['UserMin']),
         'r5': Nested(api.models['UserMin']),
         'r6': Nested(api.models['UserMin']),
+        'season': Nested(api.models['SeasonMin'])
     })
 
     # ========================= STATISTICS
@@ -106,18 +124,6 @@ def createViews(api):
     })
     api.clone('Stat', api.models['StatBase'], {
         'user': Nested(api.models['UserMin']),
-    })
-
-    # ========================= SEASONS
-    api.model('Season', {
-        'id': Integer,
-        'name': String,
-        'start_time': DateTime(dt_format="iso8601"),
-        'end_time': DateTime(dt_format="iso8601"),
-        'max_time': TimeDelta,
-        'played_matches': Integer,
-        'max_matches': Integer,
-        'running': Boolean,
     })
 
     # ========================= ALGO: MUSIGMA_TEAM
