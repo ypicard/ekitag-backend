@@ -12,6 +12,7 @@ from views import createViews
 from utils import admin_required
 from parsers import *
 import config
+import orm
 from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, musigma_team
 
 # ========================= INIT
@@ -243,4 +244,6 @@ class MusigmaTeam(Resource):
     @api.expect(parser_musigma_team_get)
     def get(self):
         args = parser_musigma_team_get.parse_args()
-        return musigma_team.show_next(args['season_id'], args['ids'])
+        cur_season = orm.to_json(orm.get_running_season.first())
+        cur_season_id = cur_season['id'] if cur_season else None
+        return musigma_team.show_next(cur_season_id, args['ids'])

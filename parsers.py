@@ -59,4 +59,3 @@ parser_create_season.add_argument('name', type=str, required=True, location='for
 
 parser_musigma_team_get = reqparse.RequestParser()
 parser_musigma_team_get.add_argument('ids', type=int, required=True, action='append', location='args')
-parser_musigma_team_get.add_argument('season_id', type=int, location='args')
