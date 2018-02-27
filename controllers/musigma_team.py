@@ -62,13 +62,28 @@ def update(r_ids, b_ids, r_score, b_score, season_id):
         orm.upsert_user_musigma_team(id, new_b_rates[idx].mu, new_b_rates[idx].sigma, season_id)
 
 
-def get_next_match(ids):
-    players = orm.get_users_musigma_team_from_ids(ids)
-    rates = [Rating(p['mu'], p['sigma']) for p in players]
+def show_next(season_id, ids):
+    if (len(ids) < 2):
+        abort(400, 'Not enough players')
+
+    env_name = 'global' if not season_id else 'season'
+    set_trueskill_env(env_name)
+    env = get_trueskill_env(env_name)
+
+    players = { id: orm.to_json(orm.get_user_musigma_team.first(id, season_id)) for id in ids }
+    rates = {id: Rating(p['mu'], p['sigma']) if p is not None else Rating() for (id, p) in players.items()}
+
     matches = get_all_possible_matches(ids)
-    qualities = [rate(m) for m in matches]
-    _, idx = min((_, idx) for (idx, _) in enumerate(qualities))
-    return matches[idx]
+    matches = [[{p: rates[p] for p in t} for t in m ] for m in matches]
+
+    qualities = [env.quality(m) for m in matches]
+    qual, idx = min((_, idx) for (idx, _) in enumerate(qualities))
+    
+    match = matches[idx]
+    match = { 'r_ids': [id for id in match[0]],
+            'b_ids': [id for id in match[1]],
+            'quality': qual }
+    return match
 
 
 def get_all_possible_matches(ids):
@@ -77,6 +92,6 @@ def get_all_possible_matches(ids):
     matches = []
     for t1 in all_teams:
         for t2 in all_teams:
-            if not any(p in t1 for p in t2):
+            if not any(p in t1 for p in t2) and not any(t2 in m for m in matches):
                 matches.append((t1, t2))
     return matches

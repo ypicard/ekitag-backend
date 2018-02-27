@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask
+from flask import Flask, request
 from flask_restplus import Api, Resource
 from flask_restplus.inputs import datetime_from_iso8601
 from flask_jwt_extended import JWTManager, get_jwt_identity
@@ -12,7 +12,7 @@ from views import createViews
 from utils import admin_required
 from parsers import *
 import config
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, musigma_team
 
 # ========================= INIT
 
@@ -234,3 +234,13 @@ class SeasonMatches(Resource):
     @api.marshal_with(api.models['MatchMin'], as_list=True)
     def get(self, season_id):
         return seasons_matches.index(season_id)
+
+# ------------------------- ALGO: MUSIGMA_TEAM
+
+@v1.route("/algo/musigma_team")
+class MusigmaTeam(Resource):
+    @api.marshal_with(api.models['MusigmaTeam'], as_list=True)
+    @api.expect(parser_musigma_team_get)
+    def get(self):
+        args = parser_musigma_team_get.parse_args()
+        return musigma_team.show_next(args['season_id'], args['ids'])

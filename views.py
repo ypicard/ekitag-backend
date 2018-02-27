@@ -119,3 +119,10 @@ def createViews(api):
         'max_matches': Integer,
         'running': Boolean,
     })
+
+    # ========================= ALGO: MUSIGMA_TEAM
+    api.model('MusigmaTeam', {
+        'r_ids': List(Integer),
+        'b_ids': List(Integer),
+        'quality': Float
+    })
