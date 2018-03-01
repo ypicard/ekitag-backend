@@ -53,6 +53,8 @@ def update(r_ids, b_ids, r_score, b_score, season_id):
 
     r_rates = get_rates(r_ids)
     b_rates = get_rates(b_ids)
+    print(r_rates)
+    print(b_rates)
 
     new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[b_score, r_score]) # Lower is better
 

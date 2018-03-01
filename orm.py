@@ -21,7 +21,7 @@ update_user = db.prepare("UPDATE users SET pseudo = $2, usual_pseudos = $3 WHERE
 get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
-get_user_by_pseudo = db.prepare("SELECT id FROM USERS WHERE $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1;")
+get_user_by_pseudo = db.prepare("SELECT * FROM USERS WHERE $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1;")
 
 # ------------------------- ADMIN
 promote_user = db.prepare("UPDATE users SET is_admin = true, password = crypt($2, gen_salt('bf')) WHERE id = $1")
@@ -105,7 +105,7 @@ create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) "
     "RETURNING id")
-get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
+# get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
 delete_match = db.prepare("DELETE FROM matches WHERE id = $1")
 delete_match_stats = db.prepare("DELETE FROM statistics WHERE match_id = $1")
 remove_match_season = db.prepare("DELETE FROM seasons_matches WHERE match_id = $1")
@@ -166,9 +166,10 @@ get_pending_match_by_id = db.prepare(
     "LEFT JOIN statistics_pending AS b4 ON b4.match_id = matches_pending.id AND b4.user_pseudo = matches_pending.b4_pseudo "
     "LEFT JOIN statistics_pending AS b5 ON b5.match_id = matches_pending.id AND b5.user_pseudo = matches_pending.b5_pseudo "
     "LEFT JOIN statistics_pending AS b6 ON b6.match_id = matches_pending.id AND b6.user_pseudo = matches_pending.b6_pseudo "
-    "WHERE matches_pending.id = $1; "
+    "WHERE matches_pending.id = $1 "
+    "LIMIT 1; "
 )
-get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
+# get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
 delete_pending_match = db.prepare("DELETE FROM matches_pending WHERE id = $1")
 delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE match_id = $1")
 

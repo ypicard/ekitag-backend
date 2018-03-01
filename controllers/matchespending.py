@@ -14,139 +14,124 @@ import postgresql.exceptions
 
 
 def index():
-    matches = orm.to_json(orm.get_pending_matches())
-    if matches is None:
-        abort(404, "No pending matches")
-    return matches
+	matches = orm.to_json(orm.get_pending_matches())
+	if matches is None:
+		abort(404, "No pending matches")
+	return matches
 
 
 def create(b_score, r_score, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo):
-    new_match_id = orm.create_pending_match.first(b_score,
-                                                  r_score,
-                                                  datetime,
-                                                  b1_pseudo,
-                                                  b2_pseudo,
-                                                  b3_pseudo,
-                                                  b4_pseudo,
-                                                  b5_pseudo,
-                                                  b6_pseudo,
-                                                  r1_pseudo,
-                                                  r2_pseudo,
-                                                  r3_pseudo,
-                                                  r4_pseudo,
-                                                  r5_pseudo,
-                                                  r6_pseudo)
-    return {
-        'message': 'Pending match created, waiting validation',
-        'value': new_match_id,
-    }
+	new_match_id = orm.create_pending_match.first(b_score,
+												  r_score,
+												  datetime,
+												  b1_pseudo,
+												  b2_pseudo,
+												  b3_pseudo,
+												  b4_pseudo,
+												  b5_pseudo,
+												  b6_pseudo,
+												  r1_pseudo,
+												  r2_pseudo,
+												  r3_pseudo,
+												  r4_pseudo,
+												  r5_pseudo,
+												  r6_pseudo)
+	return {
+		'message': 'Pending match created, waiting validation',
+		'value': new_match_id,
+	}
 
 
 def convert(match_id, validator):
-   
-    pending_match = orm.to_json(orm.get_pending_match_by_id.first(match_id))
-    pending_stats = orm.to_json(orm.get_pending_match_stats(match_id))
+	pending_match = orm.to_json(orm.get_pending_match_by_id.first(match_id))
+	# pending_stats = orm.to_json(orm.get_pending_match_stats(match_id))
+	if pending_match is None:
+		abort(404, "Pending match not found")
 
-    if pending_match is None:
-        abort(404, "Pending match not found")
+	ids = {'r': [], 'b': []}
+	for team in ['r', 'b']:
+		for idx in range(1, 7):
+			pseudo = pending_match[team + str(idx)]['user_pseudo']
+			if pseudo:
+				player = orm.to_json(orm.get_user_by_pseudo.first(pseudo))
+				if player is None:
+					abort(400, 'User ' + pseudo + ' does not exist')
+				pending_match[team + str(idx)]['user_id'] = player['id']
+				ids[team].append(player['id'])
+			else:
+				pending_match[team + str(idx)] = None		
 
-    # lol
-    b1_id = orm.get_user_by_pseudo.first(pending_match['b1_pseudo'])
-    b2_id = orm.get_user_by_pseudo.first(pending_match['b2_pseudo'])
-    b3_id = orm.get_user_by_pseudo.first(pending_match['b3_pseudo'])
-    b4_id = orm.get_user_by_pseudo.first(pending_match['b4_pseudo'])
-    b5_id = orm.get_user_by_pseudo.first(pending_match['b5_pseudo'])
-    b6_id = orm.get_user_by_pseudo.first(pending_match['b6_pseudo'])
-    r1_id = orm.get_user_by_pseudo.first(pending_match['r1_pseudo'])
-    r2_id = orm.get_user_by_pseudo.first(pending_match['r2_pseudo'])
-    r3_id = orm.get_user_by_pseudo.first(pending_match['r3_pseudo'])
-    r4_id = orm.get_user_by_pseudo.first(pending_match['r4_pseudo'])
-    r5_id = orm.get_user_by_pseudo.first(pending_match['r5_pseudo'])
-    r6_id = orm.get_user_by_pseudo.first(pending_match['r6_pseudo'])
+	try:
+		with orm.transaction():
+			new_match_id = matches_controller.create(pending_match['b_score'],
+													 pending_match['r_score'],
+													 pending_match['datetime'],
+													 pending_match['b1']['user_id'] if pending_match['b1'] else None,
+													 pending_match['b2']['user_id'] if pending_match['b2'] else None,
+													 pending_match['b3']['user_id'] if pending_match['b3'] else None,
+													 pending_match['b4']['user_id'] if pending_match['b4'] else None,
+													 pending_match['b5']['user_id'] if pending_match['b5'] else None,
+													 pending_match['b6']['user_id'] if pending_match['b6'] else None,
+													 pending_match['r1']['user_id'] if pending_match['r1'] else None,
+													 pending_match['r2']['user_id'] if pending_match['r2'] else None,
+													 pending_match['r3']['user_id'] if pending_match['r3'] else None,
+													 pending_match['r4']['user_id'] if pending_match['r4'] else None,
+													 pending_match['r5']['user_id'] if pending_match['r5'] else None,
+													 pending_match['r6']['user_id'] if pending_match['r6'] else None,
+													 validator)['value']
+			
+			for team in ['r', 'b']:
+				for idx in range(1, 7):
+					player = pending_match[team + str(idx)]
+					if player:
+						matches_stats_controller.create(new_match_id,
+												player['user_id'],
+												player['score'],
+												player['tags'],
+												player['popped'],
+												player['grabs'],
+												player['drops'],
+												player['hold'],
+												player['captures'],
+												player['prevent'],
+												player['returns'],
+												player['support'],
+												player['pups'])
 
-    pseudo_id_map = {}
-    pseudo_id_map[pending_match['b1_pseudo']] = b1_id
-    pseudo_id_map[pending_match['b2_pseudo']] = b2_id
-    pseudo_id_map[pending_match['b3_pseudo']] = b3_id
-    pseudo_id_map[pending_match['b4_pseudo']] = b4_id
-    pseudo_id_map[pending_match['b5_pseudo']] = b5_id
-    pseudo_id_map[pending_match['b6_pseudo']] = b6_id
-    pseudo_id_map[pending_match['r1_pseudo']] = r1_id
-    pseudo_id_map[pending_match['r2_pseudo']] = r2_id
-    pseudo_id_map[pending_match['r3_pseudo']] = r3_id
-    pseudo_id_map[pending_match['r4_pseudo']] = r4_id
-    pseudo_id_map[pending_match['r5_pseudo']] = r5_id
-    pseudo_id_map[pending_match['r6_pseudo']] = r6_id
-
-    new_match_id = None
-    try:
-        with orm.transaction():
-            new_match_id = matches_controller.create(pending_match['b_score'],
-                                                     pending_match['r_score'],
-                                                     pending_match['datetime'],
-                                                     b1_id,
-                                                     b2_id,
-                                                     b3_id,
-                                                     b4_id,
-                                                     b5_id,
-                                                     b6_id,
-                                                     r1_id,
-                                                     r2_id,
-                                                     r3_id,
-                                                     r4_id,
-                                                     r5_id,
-                                                     r6_id,
-                                                     validator)['value']
-
-            for stats in pending_stats:
-                matches_stats_controller.create(new_match_id,
-                                                pseudo_id_map[stats['user_pseudo']],
-                                                stats['score'],
-                                                stats['tags'],
-                                                stats['popped'],
-                                                stats['grabs'],
-                                                stats['drops'],
-                                                stats['hold'],
-                                                stats['captures'],
-                                                stats['prevent'],
-                                                stats['returns'],
-                                                stats['support'],
-                                                stats['pups'])
-
-            matchespending_stats_controller.delete_all(new_match_id)
-            delete(match_id)
-            season = seasons_controller.show_current()
-            # Update global algo
-            musigma_team_controller.update([r1_id, r2_id, r3_id, r4_id, r5_id, r6_id], 
-                                        [b1_id, b2_id, b3_id, b4_id, b5_id, b6_id],
-                                         pending_match['r_score'],
-                                         pending_match['b_score'], None)
-            if season is not None:
-                seasons_matches_controller.create(season['id'], new_match_id)
-                # Update season algo
-                musigma_team_controller.update([r1_id, r2_id, r3_id, r4_id, r5_id, r6_id], 
-                                        [b1_id, b2_id, b3_id, b4_id, b5_id, b6_id],
-                                         pending_match['r_score'],
-                                         pending_match['b_score'], season['id'])
-            
-    except postgresql.exceptions.ForeignKeyError:
-        abort(400, "Something failed. Confident in all user ids ?")
-    return {
-        'message': 'Match validated',
-        'value': new_match_id,
-    }
+			matchespending_stats_controller.delete_all(new_match_id)
+			delete(match_id)
+			season = seasons_controller.show_current()
+			# Update global algo
+			musigma_team_controller.update(ids['r'],
+											ids['b'],
+											pending_match['r_score'],
+											pending_match['b_score'], None)
+			if season is not None:
+				seasons_matches_controller.create(season['id'], new_match_id)
+				# Update season algo
+				musigma_team_controller.update(ids['r'],
+											ids['b'],
+											pending_match['r_score'],
+											pending_match['b_score'], season['id'])
+			
+	except postgresql.exceptions.ForeignKeyError:
+		abort(400, "Something failed. Confident in all user ids ?")
+	return {
+		'message': 'Match validated',
+		'value': new_match_id,
+	}
 
 
 def show(match_id):
-    match = orm.to_json(orm.get_pending_match_by_id.first(match_id))
-    if match is None:
-        abort(404, "Pending match not found")
-    return match
+	match = orm.to_json(orm.get_pending_match_by_id.first(match_id))
+	if match is None:
+		abort(404, "Pending match not found")
+	return match
 
 
 def delete(match_id):
-    orm.delete_pending_match_stats(match_id)
-    orm.delete_pending_match(match_id)
-    return {
-        'message': 'Match deleted',
-    }
+	orm.delete_pending_match_stats(match_id)
+	orm.delete_pending_match(match_id)
+	return {
+		'message': 'Match deleted',
+	}

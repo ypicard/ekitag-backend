@@ -142,11 +142,11 @@ class Match(Resource):
         return matches.delete(match_id)
 
 
-@v1.route("/matches/<int:match_id>/stats")
-class MatchStats(Resource):
-    @api.marshal_with(api.models['StatMin'], as_list=True)
-    def get(self, match_id):
-        return matches_stats.index(match_id)
+# @v1.route("/matches/<int:match_id>/stats")
+# class MatchStats(Resource):
+#     @api.marshal_with(api.models['StatMin'], as_list=True)
+#     def get(self, match_id):
+#         return matches_stats.index(match_id)
 
 
 @v1.route("/matches/pending")
@@ -184,9 +184,9 @@ class MatchPending(Resource):
 
 @v1.route("/matches/pending/<int:match_id>/stats")
 class MatchPendingStats(Resource):
-    @api.marshal_with(api.models['StatMin'], as_list=True)
-    def get(self, match_id):
-        return matchespending_stats.index(match_id)
+    # @api.marshal_with(api.models['StatMin'], as_list=True)
+    # def get(self, match_id):
+    #     return matchespending_stats.index(match_id)
 
     @api.marshal_with(api.models['Message'])
     @api.expect(parser_create_stats)

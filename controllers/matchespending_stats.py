@@ -6,11 +6,11 @@ from flask_restplus import abort
 import postgresql.exceptions
 
 
-def index(match_id):
-    stats = orm.to_json(orm.get_pending_match_stats(match_id))
-    if stats is None:
-        abort(404, "Stats not found")
-    return stats
+# def index(match_id):
+#     stats = orm.to_json(orm.get_pending_match_stats(match_id))
+#     if stats is None:
+#         abort(404, "Stats not found")
+#     return stats
 
 
 def create(match_id, user_pseudo, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups):
