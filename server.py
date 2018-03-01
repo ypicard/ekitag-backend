@@ -182,7 +182,6 @@ class MatchPending(Resource):
     def delete(self, match_id):
         return matchespending.delete(match_id)
 
-
 @v1.route("/matches/pending/<int:match_id>/stats")
 class MatchPendingStats(Resource):
     @api.marshal_with(api.models['StatMin'], as_list=True)

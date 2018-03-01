@@ -44,6 +44,34 @@ def createViews(api):
         'max_matches': Integer,
         'running': Boolean,
     })
+
+    # ========================= STATISTICS
+    api.model('StatBase', {
+        'id': Integer,
+        'match_id': Integer,
+        'score': Integer,
+        'tags': Integer,
+        'popped': Integer,
+        'grabs': Integer,
+        'drops': Integer,
+        'hold': TimeDelta,
+        'captures': Integer,
+        'prevent': TimeDelta,
+        'returns': Integer,
+        'support': Integer,
+        'pups': Integer,
+    })
+    api.clone('StatPending', api.models['StatBase'], {
+        'user_pseudo': String,
+    })
+    api.clone('StatMin', api.models['StatBase'], {
+        'user_id': Integer,
+    })
+    api.clone('Stat', api.models['StatBase'], {
+        'user': Nested(api.models['UserMin']),
+    })
+
+
     # ========================= MATCHES
     api.model('MatchBase', {
         'id': Integer,
@@ -55,18 +83,18 @@ def createViews(api):
         'validator': Nested(api.models['UserMin'])
     })
     api.clone('MatchPending', api.models['MatchBase'], {
-        'b1_pseudo': String,
-        'b2_pseudo': String,
-        'b3_pseudo': String,
-        'b4_pseudo': String,
-        'b5_pseudo': String,
-        'b6_pseudo': String,
-        'r1_pseudo': String,
-        'r2_pseudo': String,
-        'r3_pseudo': String,
-        'r4_pseudo': String,
-        'r5_pseudo': String,
-        'r6_pseudo': String,
+        'b1': Nested(api.models['StatPending']),
+        'b2': Nested(api.models['StatPending']),
+        'b3': Nested(api.models['StatPending']),
+        'b4': Nested(api.models['StatPending']),
+        'b5': Nested(api.models['StatPending']),
+        'b6': Nested(api.models['StatPending']),
+        'r1': Nested(api.models['StatPending']),
+        'r2': Nested(api.models['StatPending']),
+        'r3': Nested(api.models['StatPending']),
+        'r4': Nested(api.models['StatPending']),
+        'r5': Nested(api.models['StatPending']),
+        'r6': Nested(api.models['StatPending']),
     })
     # FFS: do only one model here
     api.clone('MatchMin', api.models['MatchValid'], {
@@ -98,32 +126,6 @@ def createViews(api):
         'r5': Nested(api.models['UserMin']),
         'r6': Nested(api.models['UserMin']),
         'season': Nested(api.models['SeasonMin'])
-    })
-
-    # ========================= STATISTICS
-    api.model('StatBase', {
-        'id': Integer,
-        'match_id': Integer,
-        'score': Integer,
-        'tags': Integer,
-        'popped': Integer,
-        'grabs': Integer,
-        'drops': Integer,
-        'hold': TimeDelta,
-        'captures': Integer,
-        'prevent': TimeDelta,
-        'returns': Integer,
-        'support': Integer,
-        'pups': Integer,
-    })
-    api.clone('StatPending', api.models['StatBase'], {
-        'user_pseudo': String,
-    })
-    api.clone('StatMin', api.models['StatBase'], {
-        'user_id': Integer,
-    })
-    api.clone('Stat', api.models['StatBase'], {
-        'user': Nested(api.models['UserMin']),
     })
 
     # ========================= ALGO: MUSIGMA_TEAM

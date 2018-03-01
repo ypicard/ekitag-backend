@@ -1,13 +1,11 @@
 {
   "manifest_version": 2,
-
   "name": "EkiTag",
   "description": "This extension directly adds match results to Eki's impressive database.",
   "version": "1.0",
   "browser_action":
   {
     "default_icon": "ekitag.png"
-    // "default_popup": "popup.html"
   },
   "permissions": [
     "activeTab"

@@ -139,7 +139,35 @@ count_user_in_pending_match = db.prepare(
     "r5_pseudo = $2 OR "
     "r6_pseudo = $2)")
 get_pending_matches = db.prepare("SELECT * FROM matches_pending")
-get_pending_match_by_id = db.prepare("SELECT * FROM matches_pending WHERE id = $1")
+get_pending_match_by_id = db.prepare(
+    "SELECT matches_pending.id as id, r_score, b_score, datetime,  "
+    "r1.id as r1$id, r1.user_pseudo as r1$user_pseudo, r1.score as r1$score, r1.tags as r1$tags, r1.popped as r1$popped, r1.grabs as r1$grabs, r1.drops as r1$drops, r1.hold as r1$hold, r1.captures as r1$captures, r1.prevent as r1$prevent, r1.returns as r1$returns, r1.support as r1$support, r1.pups as r1$pups, "
+    "r2.id as r2$id, r2.user_pseudo as r2$user_pseudo, r2.score as r2$score, r2.tags as r2$tags, r2.popped as r2$popped, r2.grabs as r2$grabs, r2.drops as r2$drops, r2.hold as r2$hold, r2.captures as r2$captures, r2.prevent as r2$prevent, r2.returns as r2$returns, r2.support as r2$support, r2.pups as r2$pups, "
+    "r3.id as r3$id, r3.user_pseudo as r3$user_pseudo, r3.score as r3$score, r3.tags as r3$tags, r3.popped as r3$popped, r3.grabs as r3$grabs, r3.drops as r3$drops, r3.hold as r3$hold, r3.captures as r3$captures, r3.prevent as r3$prevent, r3.returns as r3$returns, r3.support as r3$support, r3.pups as r3$pups, "
+    "r4.id as r4$id, r4.user_pseudo as r4$user_pseudo, r4.score as r4$score, r4.tags as r4$tags, r4.popped as r4$popped, r4.grabs as r4$grabs, r4.drops as r4$drops, r4.hold as r4$hold, r4.captures as r4$captures, r4.prevent as r4$prevent, r4.returns as r4$returns, r4.support as r4$support, r4.pups as r4$pups, "
+    "r5.id as r5$id, r5.user_pseudo as r5$user_pseudo, r5.score as r5$score, r5.tags as r5$tags, r5.popped as r5$popped, r5.grabs as r5$grabs, r5.drops as r5$drops, r5.hold as r5$hold, r5.captures as r5$captures, r5.prevent as r5$prevent, r5.returns as r5$returns, r5.support as r5$support, r5.pups as r5$pups, "
+    "r6.id as r6$id, r6.user_pseudo as r6$user_pseudo, r6.score as r6$score, r6.tags as r6$tags, r6.popped as r6$popped, r6.grabs as r6$grabs, r6.drops as r6$drops, r6.hold as r6$hold, r6.captures as r6$captures, r6.prevent as r6$prevent, r6.returns as r6$returns, r6.support as r6$support, r6.pups as r6$pups, "
+    "b1.id as b1$id, b1.user_pseudo as b1$user_pseudo, b1.score as b1$score, b1.tags as b1$tags, b1.popped as b1$popped, b1.grabs as b1$grabs, b1.drops as b1$drops, b1.hold as b1$hold, b1.captures as b1$captures, b1.prevent as b1$prevent, b1.returns as b1$returns, b1.support as b1$support, b1.pups as b1$pups, "
+    "b2.id as b2$id, b2.user_pseudo as b2$user_pseudo, b2.score as b2$score, b2.tags as b2$tags, b2.popped as b2$popped, b2.grabs as b2$grabs, b2.drops as b2$drops, b2.hold as b2$hold, b2.captures as b2$captures, b2.prevent as b2$prevent, b2.returns as b2$returns, b2.support as b2$support, b2.pups as b2$pups, "
+    "b3.id as b3$id, b3.user_pseudo as b3$user_pseudo, b3.score as b3$score, b3.tags as b3$tags, b3.popped as b3$popped, b3.grabs as b3$grabs, b3.drops as b3$drops, b3.hold as b3$hold, b3.captures as b3$captures, b3.prevent as b3$prevent, b3.returns as b3$returns, b3.support as b3$support, b3.pups as b3$pups, "
+    "b4.id as b4$id, b4.user_pseudo as b4$user_pseudo, b4.score as b4$score, b4.tags as b4$tags, b4.popped as b4$popped, b4.grabs as b4$grabs, b4.drops as b4$drops, b4.hold as b4$hold, b4.captures as b4$captures, b4.prevent as b4$prevent, b4.returns as b4$returns, b4.support as b4$support, b4.pups as b4$pups, "
+    "b5.id as b5$id, b5.user_pseudo as b5$user_pseudo, b5.score as b5$score, b5.tags as b5$tags, b5.popped as b5$popped, b5.grabs as b5$grabs, b5.drops as b5$drops, b5.hold as b5$hold, b5.captures as b5$captures, b5.prevent as b5$prevent, b5.returns as b5$returns, b5.support as b5$support, b5.pups as b5$pups, "
+    "b6.id as b6$id, b6.user_pseudo as b6$user_pseudo, b6.score as b6$score, b6.tags as b6$tags, b6.popped as b6$popped, b6.grabs as b6$grabs, b6.drops as b6$drops, b6.hold as b6$hold, b6.captures as b6$captures, b6.prevent as b6$prevent, b6.returns as b6$returns, b6.support as b6$support, b6.pups as b6$pups "
+    "FROM matches_pending  "
+    "LEFT JOIN statistics_pending AS r1 ON r1.match_id = matches_pending.id AND r1.user_pseudo = matches_pending.r1_pseudo "
+    "LEFT JOIN statistics_pending AS r2 ON r2.match_id = matches_pending.id AND r2.user_pseudo = matches_pending.r2_pseudo "
+    "LEFT JOIN statistics_pending AS r3 ON r3.match_id = matches_pending.id AND r3.user_pseudo = matches_pending.r3_pseudo "
+    "LEFT JOIN statistics_pending AS r4 ON r4.match_id = matches_pending.id AND r4.user_pseudo = matches_pending.r4_pseudo "
+    "LEFT JOIN statistics_pending AS r5 ON r5.match_id = matches_pending.id AND r5.user_pseudo = matches_pending.r5_pseudo "
+    "LEFT JOIN statistics_pending AS r6 ON r6.match_id = matches_pending.id AND r6.user_pseudo = matches_pending.r6_pseudo "
+    "LEFT JOIN statistics_pending AS b1 ON b1.match_id = matches_pending.id AND b1.user_pseudo = matches_pending.b1_pseudo "
+    "LEFT JOIN statistics_pending AS b2 ON b2.match_id = matches_pending.id AND b2.user_pseudo = matches_pending.b2_pseudo "
+    "LEFT JOIN statistics_pending AS b3 ON b3.match_id = matches_pending.id AND b3.user_pseudo = matches_pending.b3_pseudo "
+    "LEFT JOIN statistics_pending AS b4 ON b4.match_id = matches_pending.id AND b4.user_pseudo = matches_pending.b4_pseudo "
+    "LEFT JOIN statistics_pending AS b5 ON b5.match_id = matches_pending.id AND b5.user_pseudo = matches_pending.b5_pseudo "
+    "LEFT JOIN statistics_pending AS b6 ON b6.match_id = matches_pending.id AND b6.user_pseudo = matches_pending.b6_pseudo "
+    "WHERE matches_pending.id = $1; "
+)
 get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
 delete_pending_match = db.prepare("DELETE FROM matches_pending WHERE id = $1")
 delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE match_id = $1")
