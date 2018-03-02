@@ -213,7 +213,8 @@ class Seasons(Resource):
     @admin_required
     def post(self):
         args = parser_create_season.parse_args()
-        args['max_time'] = datetime.timedelta(seconds=args['max_time'])
+        if args['max_time'] is not None:
+            args['max_time'] = datetime.timedelta(seconds=args['max_time'])
         return seasons.create(**args)
 
 @v1.route("/seasons/<int:season_id>")
