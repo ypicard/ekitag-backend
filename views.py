@@ -96,7 +96,6 @@ def createViews(api):
         'r5': Nested(api.models['StatPending']),
         'r6': Nested(api.models['StatPending']),
     })
-    # FFS: do only one model here
     api.clone('MatchMin', api.models['MatchValid'], {
         'b1_id': Integer,
         'b2_id': Integer,
@@ -125,6 +124,18 @@ def createViews(api):
         'r4': Nested(api.models['UserMin']),
         'r5': Nested(api.models['UserMin']),
         'r6': Nested(api.models['UserMin']),
+        'b1_stats': Nested(api.models['StatMin']),
+        'b2_stats': Nested(api.models['StatMin']),
+        'b3_stats': Nested(api.models['StatMin']),
+        'b4_stats': Nested(api.models['StatMin']),
+        'b5_stats': Nested(api.models['StatMin']),
+        'b6_stats': Nested(api.models['StatMin']),
+        'r1_stats': Nested(api.models['StatMin']),
+        'r2_stats': Nested(api.models['StatMin']),
+        'r3_stats': Nested(api.models['StatMin']),
+        'r4_stats': Nested(api.models['StatMin']),
+        'r5_stats': Nested(api.models['StatMin']),
+        'r6_stats': Nested(api.models['StatMin']),
         'season': Nested(api.models['SeasonMin'])
     })
 
