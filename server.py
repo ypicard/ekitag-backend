@@ -160,6 +160,7 @@ class MatchesPending(Resource):
     def post(self):
         args = parser_create_match.parse_args()
         args['datetime'] = datetime_from_iso8601(args['datetime'])
+        args['duration'] = datetime.timedelta(seconds=args['duration'])
         return matchespending.create(**args)
 
 

@@ -78,6 +78,7 @@ def createViews(api):
         'r_score': Integer,
         'b_score': Integer,
         'datetime': DateTime(dt_format="iso8601"),
+        'duration': TimeDelta,
     })
     api.clone('MatchValid', api.models['MatchBase'], {
         'validator': Nested(api.models['UserMin'])

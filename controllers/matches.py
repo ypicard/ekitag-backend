@@ -13,9 +13,10 @@ def index():
     return matches
 
 
-def create(b_score, r_score, datetime, b1_id, b2_id, b3_id, b4_id, b5_id, b6_id, r1_id, r2_id, r3_id, r4_id, r5_id, r6_id, validator):
+def create(b_score, r_score, duration, datetime, b1_id, b2_id, b3_id, b4_id, b5_id, b6_id, r1_id, r2_id, r3_id, r4_id, r5_id, r6_id, validator):
     new_match_id = orm.create_match.first(b_score,
                                         r_score,
+                                        duration,
                                         datetime,
                                         b1_id,
                                         b2_id,

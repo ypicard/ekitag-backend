@@ -30,14 +30,14 @@ block_admin = db.prepare("UPDATE users SET is_admin = false WHERE id = $1")
 
 # ------------------------- MATCHES
 create_match = db.prepare(
-    "INSERT INTO matches (b_score, r_score, datetime, "
+    "INSERT INTO matches (b_score, r_score, duration, datetime, "
     "b1_id, b2_id, b3_id, b4_id, b5_id, b6_id, "
     "r1_id, r2_id, r3_id, r4_id, r5_id, r6_id, "
     "validated_by) "
-    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) "
+    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) "
     "RETURNING id")
 get_matches = db.prepare(
-    "SELECT matches.id AS id,  matches.r_score, matches.b_score, matches.datetime,"
+    "SELECT matches.id AS id,  matches.r_score, matches.b_score, matches.duration, matches.datetime,"
     "matches.b1_id, matches.b2_id, matches.b3_id, matches.b4_id, matches.b5_id, matches.b6_id, "
     "matches.r1_id, matches.r2_id, matches.r3_id, matches.r4_id, matches.r5_id, matches.r6_id,"
     "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos, "
@@ -50,7 +50,7 @@ get_matches = db.prepare(
     "LEFT JOIN seasons AS season "
     "ON season.id = seasons_matches.season_id")
 get_match_by_id = db.prepare(
-    "SELECT matches.id as id, r_score, b_score, datetime,  "
+    "SELECT matches.id as id, r_score, b_score, duration, datetime,  "
     "r1.id as r1$id, r1.pseudo as r1$pseudo, "
     "r2.id as r2$id, r2.pseudo as r2$pseudo, "
     "r3.id as r3$id, r3.pseudo as r3$pseudo, "
@@ -144,10 +144,10 @@ remove_match_season = db.prepare("DELETE FROM seasons_matches WHERE match_id = $
 
 # ------------------------- PENDING MATCHES
 create_pending_match = db.prepare(
-    "INSERT INTO matches_pending (b_score, r_score, datetime, "
+    "INSERT INTO matches_pending (b_score, r_score, duration, datetime, "
     "b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, "
     "r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo) "
-    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) "
+    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) "
     "RETURNING id")
 create_pending_stats = db.prepare(
     "INSERT INTO statistics_pending (match_id, user_pseudo, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
@@ -172,7 +172,7 @@ count_user_in_pending_match = db.prepare(
     "r6_pseudo = $2)")
 get_pending_matches = db.prepare("SELECT * FROM matches_pending")
 get_pending_match_by_id = db.prepare(
-    "SELECT matches_pending.id as id, r_score, b_score, datetime,  "
+    "SELECT matches_pending.id as id, r_score, b_score, duration, datetime,  "
     "r1.id as r1$id, r1.user_pseudo as r1$user_pseudo, r1.score as r1$score, r1.tags as r1$tags, r1.popped as r1$popped, r1.grabs as r1$grabs, r1.drops as r1$drops, r1.hold as r1$hold, r1.captures as r1$captures, r1.prevent as r1$prevent, r1.returns as r1$returns, r1.support as r1$support, r1.pups as r1$pups, "
     "r2.id as r2$id, r2.user_pseudo as r2$user_pseudo, r2.score as r2$score, r2.tags as r2$tags, r2.popped as r2$popped, r2.grabs as r2$grabs, r2.drops as r2$drops, r2.hold as r2$hold, r2.captures as r2$captures, r2.prevent as r2$prevent, r2.returns as r2$returns, r2.support as r2$support, r2.pups as r2$pups, "
     "r3.id as r3$id, r3.user_pseudo as r3$user_pseudo, r3.score as r3$score, r3.tags as r3$tags, r3.popped as r3$popped, r3.grabs as r3$grabs, r3.drops as r3$drops, r3.hold as r3$hold, r3.captures as r3$captures, r3.prevent as r3$prevent, r3.returns as r3$returns, r3.support as r3$support, r3.pups as r3$pups, "

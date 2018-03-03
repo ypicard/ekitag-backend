@@ -20,11 +20,12 @@ def index():
     return matches
 
 
-def create(b_score, r_score, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo):
+def create(b_score, r_score, duration, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo):
     if b1_pseudo is None or r1_pseudo is None:
         abort(403, 'Each team must have at lease one player.')
     new_match_id = orm.create_pending_match.first(b_score,
                                                   r_score,
+                                                  duration,
                                                   datetime,
                                                   b1_pseudo,
                                                   b2_pseudo,

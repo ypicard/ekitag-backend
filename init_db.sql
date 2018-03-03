@@ -34,6 +34,7 @@
 --  r6_id INTEGER REFERENCES users(id),
 --  r_score INTEGER NOT NULL,
 --  b_score INTEGER NOT NULL,
+--  duration INTERVAL NOT NULL,
 --  validated_by INTEGER REFERENCES users(id),
 --  datetime TIMESTAMP WITH TIME ZONE NOT NULL
 -- );
@@ -55,6 +56,7 @@
 --  r6_pseudo VARCHAR(50),
 --  r_score INTEGER NOT NULL,
 --  b_score INTEGER NOT NULL,
+--  duration INTERVAL NOT NULL,
 --  datetime TIMESTAMP WITH TIME ZONE NOT NULL
 -- );
 
