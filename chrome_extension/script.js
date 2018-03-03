@@ -8,6 +8,7 @@ var matchData = {
   "datetime": new Date().toISOString(),
   "r_score": 0,
   "b_score": 0,
+  "duration": null,
   "b1_pseudo": null,
   "b2_pseudo": null,
   "b3_pseudo": null,
@@ -67,8 +68,17 @@ playerStats.forEach(function (player) {
   playersStats.push(playerStats);
 });
 
+// Approximation of match duration (min is to limit max length to 600 secs = 10 mins)
+matchData['duration'] = Math.min(600, playersStats.reduce(function(sum, pl) {
+  return sum + pl['hold'] + pl['prevent'];
+}, 0) / 2);
+if(matchData['duration'] >= 540 || (matchData['r_score'] < 5 && matchData['b_score'] < 5)) {
+  matchData["duration"] = 600;
+}
+
 var msg = "Content scrapped :\n"
 msg += 'SCORE :\n RED ' + matchData.r_score + ' - BLUE : ' + matchData.b_score
+msg += '\nDURATION: ' + matchData.duration
 msg += '\nPLAYERS :'
 playersStats.forEach(function (player) {
   msg += '\n' + player.user_pseudo;
@@ -85,7 +95,6 @@ for (var key in matchData) {
 var matchDataRequest = new XMLHttpRequest();
 console.log('Sending request...');
 matchDataRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending', true);
-// matchDataRequest.open('POST', 'http://127.0.0.1:5000/v1/matches/pending', true);
 matchDataRequest.onreadystatechange = function () {
   if (this.readyState == 4 && this.status == 200) {
     var response = JSON.parse(matchDataRequest.response)
@@ -102,7 +111,6 @@ matchDataRequest.onreadystatechange = function () {
 
       var statRequest = new XMLHttpRequest();
       statRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending/' + matchId + '/stats', true);
-      // statRequest.open('POST', 'http://127.0.0.1:5000/v1/matches/pending/' + matchId + '/stats', true);
       statRequest.onreadystatechange = function () {
 
         if (this.readyState == 4 && this.status == 200) {
@@ -117,5 +125,4 @@ matchDataRequest.onreadystatechange = function () {
 
   }
 };
-// matchDataRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 matchDataRequest.send(matchFormData);
