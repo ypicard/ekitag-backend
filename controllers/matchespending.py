@@ -23,6 +23,12 @@ def index():
 def create(b_score, r_score, duration, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo):
     if b1_pseudo is None or r1_pseudo is None:
         abort(403, 'Each team must have at lease one player.')
+    
+    # Check if match hasn't been submitted already
+    last_match = orm.to_json(orm.get_pending_matches())[0]
+    if last_match['b_score'] == b_score and last_match['r_score'] == r_score and last_match['b1_pseudo'] == b1_pseudo and last_match['r1_pseudo'] == r1_pseudo and last_match['b2_pseudo'] == b2_pseudo and last_match['r2_pseudo'] == r2_pseudo and last_match['b3_pseudo'] == b3_pseudo and last_match['r3_pseudo'] == r3_pseudo:
+        abort(403, 'Match already pendgin for validation.')
+
     new_match_id = orm.create_pending_match.first(b_score,
                                                   r_score,
                                                   duration,

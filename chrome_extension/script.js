@@ -1,5 +1,9 @@
 console.log('Starting parsing...')
 var playerStats = document.getElementById("stats").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+var apiBaseUrl = 'https://ekitag-api.herokuapp.com/v1/';
+// var apiBaseUrl = "http://localhost:5000/v1/";
+
 // Remove useless rows
 playerStats[0].remove();
 
@@ -94,7 +98,7 @@ for (var key in matchData) {
 // BUILD MATCH REQUEST
 var matchDataRequest = new XMLHttpRequest();
 console.log('Sending request...');
-matchDataRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending', true);
+matchDataRequest.open('POST', apiBaseUrl + 'matches/pending', true);
 matchDataRequest.onreadystatechange = function () {
   if (this.readyState == 4 && this.status == 200) {
     var response = JSON.parse(matchDataRequest.response)
@@ -110,7 +114,7 @@ matchDataRequest.onreadystatechange = function () {
       }
 
       var statRequest = new XMLHttpRequest();
-      statRequest.open('POST', 'https://ekitag-api.herokuapp.com/v1/matches/pending/' + matchId + '/stats', true);
+      statRequest.open('POST', apiBaseUrl + 'matches/pending/' + matchId + '/stats', true);
       statRequest.onreadystatechange = function () {
 
         if (this.readyState == 4 && this.status == 200) {
