@@ -33,8 +33,19 @@ def show(season_id):
 
 
 def delete(season_id):
-    # TODO : update stars
-    orm.terminate_season(season_id, datetime.datetime.now())
+    with orm.transaction():
+        orm.terminate_season(season_id, datetime.datetime.now())
+        # Award stars
+        ranked_users = orm.to_json(orm.get_ranked_users_musigma_team(season_id))
+    
+        if len(ranked_users) > 1:
+            orm.award_gold_star(ranked_users[0]['user_id'])
+            orm.award_loser_star(ranked_users[-1]['user_id'])
+        if len(ranked_users) > 2:
+            orm.award_silver_star(ranked_users[1]['user_id'])
+        if len(ranked_users) > 3:
+            orm.award_copper_star(ranked_users[2]['user_id'])
+    
     return {
         'message': 'Season finished',
     }

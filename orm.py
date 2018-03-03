@@ -22,6 +22,10 @@ get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
 get_user_by_pseudo = db.prepare("SELECT * FROM USERS WHERE $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1;")
+award_gold_star = db.prepare("UPDATE users SET gold_stars = gold_stars + 1 WHERE id = $1 RETURNING gold_stars")
+award_silver_star = db.prepare("UPDATE users SET silver_stars = silver_stars + 1 WHERE id = $1 RETURNING silver_stars")
+award_copper_star = db.prepare("UPDATE users SET copper_stars = copper_stars + 1 WHERE id = $1 RETURNING copper_stars")
+award_loser_star = db.prepare("UPDATE users SET loser_stars = loser_stars + 1 WHERE id = $1 RETURNING loser_stars")
 
 # ------------------------- ADMIN
 promote_user = db.prepare("UPDATE users SET is_admin = true, password = crypt($2, gen_salt('bf')) WHERE id = $1")
@@ -133,6 +137,12 @@ get_user_matches = db.prepare(
     "r4_id = $1 OR "
     "r5_id = $1 OR "
     "r6_id = $1")
+get_ranked_users_musigma_team = db.prepare(
+    "SELECT users.id AS user_id, users.pseudo AS user_pseudo, season_id, seasons.name AS season_name, mu, sigma FROM musigma_team "
+    "LEFT JOIN users ON users.id = musigma_team.user_id "
+    "LEFT JOIN seasons on seasons.id = musigma_team.season_id "
+    "WHERE season_id = $1 ORDER BY mu DESC;"
+)
 create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) "

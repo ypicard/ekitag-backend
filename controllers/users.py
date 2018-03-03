@@ -45,6 +45,16 @@ def update(user_id, pseudo, usual_pseudos):
     }
 
 
+def award(user_id, star_type):
+    { 'gold': orm.award_gold_star,
+    'silver': orm.award_silver_star,
+    'copper': orm.award_copper_star,
+    'loser': orm.award_loser_star }[start_type]()
+
+    return {
+        'message': 'Star awarded'
+    }
+
 def delete(user_id):
     orm.desactivate_user(user_id)
     return {
