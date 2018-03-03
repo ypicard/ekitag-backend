@@ -137,7 +137,6 @@ create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) "
     "RETURNING id")
-# get_match_stats = db.prepare("SELECT * from statistics where match_id = $1")
 delete_match = db.prepare("DELETE FROM matches WHERE id = $1")
 delete_match_stats = db.prepare("DELETE FROM statistics WHERE match_id = $1")
 remove_match_season = db.prepare("DELETE FROM seasons_matches WHERE match_id = $1")
@@ -171,6 +170,7 @@ count_user_in_pending_match = db.prepare(
     "r5_pseudo = $2 OR "
     "r6_pseudo = $2)")
 get_pending_matches = db.prepare("SELECT * FROM matches_pending")
+get_last_pending_match = db.prepare("SELECT * FROM matches_pending ORDER BY id DESC LIMIT 1")
 get_pending_match_by_id = db.prepare(
     "SELECT matches_pending.id as id, r_score, b_score, duration, datetime,  "
     "r1.id as r1$id, r1.user_pseudo as r1$user_pseudo, r1.score as r1$score, r1.tags as r1$tags, r1.popped as r1$popped, r1.grabs as r1$grabs, r1.drops as r1$drops, r1.hold as r1$hold, r1.captures as r1$captures, r1.prevent as r1$prevent, r1.returns as r1$returns, r1.support as r1$support, r1.pups as r1$pups, "
@@ -201,7 +201,6 @@ get_pending_match_by_id = db.prepare(
     "WHERE matches_pending.id = $1 "
     "LIMIT 1; "
 )
-# get_pending_match_stats = db.prepare("SELECT * FROM statistics_pending WHERE match_id = $1")
 delete_pending_match = db.prepare("DELETE FROM matches_pending WHERE id = $1")
 delete_pending_match_stats = db.prepare("DELETE FROM statistics_pending WHERE match_id = $1")
 
@@ -229,12 +228,13 @@ terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2
 # get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
 # get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
 get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
+get_user_musigma_team_global = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id IS NULL")
 update_user_musigma_team = db.prepare("UPDATE musigma_team SET mu = $2, sigma = $3 WHERE user_id = $1 AND season_id = $2")
 create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) RETURNING id")
 upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) "
-    "ON CONFLICT (user_id, season_id) DO UPDATE SET mu = $2, sigma = $3 RETURNING *")
-# update_user_team_musigma = db.prepare("UPDATE musigma_team SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
-# update_user_team_global_musigma = lambda user_id, mu, sigma: update_user_team_musigma(user_id, None, mu, sigma)
+    "ON CONFLICT (user_id, season_id) DO UPDATE SET mu = $2, sigma = $3 "
+    "RETURNING *")
+delete_user_musigma_team_global = db.prepare("DELETE FROM MUSIGMA_TEAM WHERE user_id = $1 AND season_id IS NULL")
 # create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
 # create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
 # get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
@@ -242,6 +242,8 @@ upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, si
 # update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
 # update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
 
+# ------------------------- µσ-ranking history
+create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 
 # ========================= UTILS
 # ROW CONVERTER MONKEY PATCHING

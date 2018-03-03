@@ -25,8 +25,8 @@ def create(b_score, r_score, duration, datetime, b1_pseudo, b2_pseudo, b3_pseudo
         abort(403, 'Each team must have at lease one player.')
     
     # Check if match hasn't been submitted already
-    last_match = orm.to_json(orm.get_pending_matches())[0]
-    if last_match['b_score'] == b_score and last_match['r_score'] == r_score and last_match['b1_pseudo'] == b1_pseudo and last_match['r1_pseudo'] == r1_pseudo and last_match['b2_pseudo'] == b2_pseudo and last_match['r2_pseudo'] == r2_pseudo and last_match['b3_pseudo'] == b3_pseudo and last_match['r3_pseudo'] == r3_pseudo:
+    last_match = orm.to_json(orm.get_last_pending_match.first())
+    if last_match is not None and last_match['b_score'] == b_score and last_match['r_score'] == r_score and last_match['b1_pseudo'] == b1_pseudo and last_match['r1_pseudo'] == r1_pseudo and last_match['b2_pseudo'] == b2_pseudo and last_match['r2_pseudo'] == r2_pseudo and last_match['b3_pseudo'] == b3_pseudo and last_match['r3_pseudo'] == r3_pseudo:
         abort(403, 'Match already pendgin for validation.')
 
     new_match_id = orm.create_pending_match.first(b_score,
@@ -69,11 +69,11 @@ def convert(match_id, validator):
                 ids[team].append(player['id'])
             else:
                 pending_match[team + str(idx)] = None		
-
     try:
         with orm.transaction():
             new_match_id = matches_controller.create(pending_match['b_score'],
                                                      pending_match['r_score'],
+                                                     pending_match['duration'],
                                                      pending_match['datetime'],
                                                      pending_match['b1']['user_id'] if pending_match['b1'] else None,
                                                      pending_match['b2']['user_id'] if pending_match['b2'] else None,
@@ -114,14 +114,14 @@ def convert(match_id, validator):
             musigma_team_controller.update(ids['r'],
                                             ids['b'],
                                             pending_match['r_score'],
-                                            pending_match['b_score'], None)
+                                            pending_match['b_score'], new_match_id, None)
             if season is not None:
                 seasons_matches_controller.create(season['id'], new_match_id)
                 # Update season algo
                 musigma_team_controller.update(ids['r'],
                                             ids['b'],
                                             pending_match['r_score'],
-                                            pending_match['b_score'], season['id'])
+                                            pending_match['b_score'], new_match_id, season['id'])
             
     except postgresql.exceptions.ForeignKeyError:
         abort(400, "Something failed. Confident in all user ids ?")

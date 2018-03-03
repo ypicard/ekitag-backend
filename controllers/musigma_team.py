@@ -31,13 +31,16 @@ def set_trueskill_env(name):
 def get_trueskill_env(name):
     return configs[name]
 
-def update(r_ids, b_ids, r_score, b_score, season_id):
+def update(r_ids, b_ids, r_score, b_score, match_id, season_id):
 
     def get_rates(ids):
         # Get musigma user / create it if none
         res = []
-        for id in ids:
-            pl = orm.to_json(orm.get_user_musigma_team.first(id, season_id))
+        for user_id in ids:
+            if season_id is not None:
+                pl = orm.to_json(orm.get_user_musigma_team.first(user_id, season_id))
+            else: 
+                pl = orm.to_json(orm.get_user_musigma_team_global.first(user_id))
             if pl is not None:
                 res.append(Rating(float(pl['mu']), float(pl['sigma'])))
             else:
@@ -48,20 +51,21 @@ def update(r_ids, b_ids, r_score, b_score, season_id):
     set_trueskill_env(env_name)
     env = get_trueskill_env(env_name)
 
-    r_ids = [id for id in r_ids if id is not None]
-    b_ids = [id for id in b_ids if id is not None]
+    r_ids = [user_id for user_id in r_ids if user_id is not None]
+    b_ids = [user_id for user_id in b_ids if user_id is not None]
 
     r_rates = get_rates(r_ids)
-    b_rates = get_rates(b_ids)
-    print(r_rates)
-    print(b_rates)
-
+    b_rates = get_rates(b_ids)    
     new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[b_score, r_score]) # Lower is better
 
-    for idx, id in enumerate(r_ids):
-        orm.upsert_user_musigma_team(id, new_r_rates[idx].mu, new_r_rates[idx].sigma, season_id)
-    for idx, id in enumerate(b_ids):
-        orm.upsert_user_musigma_team(id, new_b_rates[idx].mu, new_b_rates[idx].sigma, season_id)
+    new_rates = new_r_rates + new_b_rates
+    with orm.transaction():
+        for idx, user_id in enumerate(r_ids + b_ids):
+            if season_id is None:
+                # This is a shitty hack beacuse upsert does not work with NULL values -> Delete record first, than recreate it with updated values.
+                orm.delete_user_musigma_team_global(user_id)
+            orm.upsert_user_musigma_team(user_id, new_rates[idx].mu, new_rates[idx].sigma, season_id)
+            orm.create_musigma_team_history(user_id, match_id, season_id, new_rates[idx].mu, new_rates[idx].sigma)
 
 
 def show_next(season_id, ids):

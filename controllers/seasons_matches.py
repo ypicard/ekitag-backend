@@ -19,7 +19,8 @@ def create(season_id, match_id):
     new_match = orm.to_json(orm.get_match_by_id.first(match_id))
     season = orm.to_json(orm.get_season_by_id.first(season_id))
     orm.update_season_match_count(season_id)
-    if new_match['datetime'] >= season['start_time'] + season['max_time'] or season['played_matches'] + 1 >= season['max_matches']:
+    if (season['max_time'] is not None and new_match['datetime'] >= season['start_time'] + season['max_time']) or \
+        (season['max_matches'] is not None and season['played_matches'] + 1 >= season['max_matches']):
         seasons_controller.delete(season_id)
     return {
         'message': 'Match added to season',
