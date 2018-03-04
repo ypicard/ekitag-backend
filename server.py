@@ -236,17 +236,17 @@ class SeasonMatches(Resource):
     def get(self, season_id):
         return seasons_matches.index(season_id)
 
-# ------------------------- ALGO: MUSIGMA_TEAM
+# ------------------------- ALGO
 
-@v1.route("/algo/musigma_team")
+@v1.route("/algo/<string:algo>")
 class Algo(Resource):
-    @api.marshal_with(api.models['MusigmaTeam'], as_list=True)
-    @api.expect(parser_musigma_team_get)
-    def get(self):
-        args = parser_musigma_team_get.parse_args()
+    @api.marshal_with(api.models['Algo'], as_list=True)
+    @api.expect(parser_algo_get)
+    def get(self, algo):
+        args = parser_algo_get.parse_args()
         cur_season = orm.to_json(orm.get_running_season.first())
         cur_season_id = cur_season['id'] if cur_season else None
-        return musigma_team.show_next(cur_season_id, args['ids'])
+        return { 'musigma_team': musigma_team.show_next }[algo](cur_season_id, args['ids'])
 
 @v1.route("/algo/<string:algo>/ranking")
 class Ranking(Resource):

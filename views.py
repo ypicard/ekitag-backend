@@ -148,8 +148,8 @@ def createViews(api):
         'season': Nested(api.models['SeasonMin'])
     })
 
-    # ========================= ALGO: MUSIGMA_TEAM
-    api.model('MusigmaTeam', {
+    # ========================= ALGO
+    api.model('Algo', {
         'r_ids': List(Integer),
         'b_ids': List(Integer),
         'quality': Float

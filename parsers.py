@@ -56,5 +56,5 @@ parser_create_season.add_argument('name', type=str, required=True, location='for
 parser_create_season.add_argument('max_time', type=float, location='form')
 parser_create_season.add_argument('max_matches', type=int, location='form')
 
-parser_musigma_team_get = reqparse.RequestParser()
-parser_musigma_team_get.add_argument('ids', type=int, required=True, action='append', location='args')
+parser_algo_get = reqparse.RequestParser()
+parser_algo_get.add_argument('ids', type=int, required=True, action='append', location='args')
