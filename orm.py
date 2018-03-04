@@ -137,11 +137,21 @@ get_user_matches = db.prepare(
     "r4_id = $1 OR "
     "r5_id = $1 OR "
     "r6_id = $1")
-get_ranked_users_musigma_team = db.prepare(
-    "SELECT users.id AS user_id, users.pseudo AS user_pseudo, season_id, seasons.name AS season_name, mu, sigma FROM musigma_team "
+get_ranked_users_musigma_team_season = db.prepare(
+    "SELECT users.id AS user_id, users.pseudo, users.usual_pseudos, users.is_active, rank() OVER (ORDER BY mu DESC) AS rank, "
+    "season_id, seasons.name AS season_name, start_time, end_time, max_time, played_matches, max_matches, running, "
+    "mu, sigma FROM musigma_team "
     "LEFT JOIN users ON users.id = musigma_team.user_id "
     "LEFT JOIN seasons on seasons.id = musigma_team.season_id "
-    "WHERE season_id = $1 ORDER BY mu DESC;"
+    "WHERE season_id = $1"
+)
+get_ranked_users_musigma_team_global = db.prepare(
+    "SELECT users.id AS user_id, users.pseudo, users.usual_pseudos, users.is_active, rank() OVER (ORDER BY mu DESC) AS rank, "
+    "season_id, seasons.name AS season_name, start_time, end_time, max_time, played_matches, max_matches, running, "
+    "mu, sigma FROM musigma_team "
+    "LEFT JOIN users ON users.id = musigma_team.user_id "
+    "LEFT JOIN seasons on seasons.id = musigma_team.season_id "
+    "WHERE season_id IS NULL"
 )
 create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "

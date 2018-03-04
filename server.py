@@ -170,7 +170,6 @@ class MatchPending(Resource):
     def get(self, match_id):
         return matchespending.show(match_id)
 
-    @api.expect(parser_validate_match)
     @api.marshal_with(api.models['Message'])
     @api.doc(security='admin')
     @admin_required
@@ -240,7 +239,7 @@ class SeasonMatches(Resource):
 # ------------------------- ALGO: MUSIGMA_TEAM
 
 @v1.route("/algo/musigma_team")
-class MusigmaTeam(Resource):
+class Algo(Resource):
     @api.marshal_with(api.models['MusigmaTeam'], as_list=True)
     @api.expect(parser_musigma_team_get)
     def get(self):
@@ -248,3 +247,16 @@ class MusigmaTeam(Resource):
         cur_season = orm.to_json(orm.get_running_season.first())
         cur_season_id = cur_season['id'] if cur_season else None
         return musigma_team.show_next(cur_season_id, args['ids'])
+
+@v1.route("/algo/<string:algo>/ranking")
+class Ranking(Resource):
+    @api.marshal_with(api.models['Ranking'])
+    def get(self, algo):
+        return seasons.show_ranking(algo, None)
+
+
+@v1.route("/algo/<string:algo>/ranking/<int:season_id>")
+class RankingSeason(Resource):
+    @api.marshal_with(api.models['RankingSeason'])
+    def get(self, algo, season_id):
+        return seasons.show_ranking(algo, season_id)

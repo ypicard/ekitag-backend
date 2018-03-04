@@ -19,8 +19,6 @@ parser_update_user.add_argument('usual_pseudos', type=str, required=True, action
 parser_promote = reqparse.RequestParser()
 parser_promote.add_argument('password', type=str, required=True, location='form')
 
-parser_validate_match = reqparse.RequestParser()
-
 parser_create_stats = reqparse.RequestParser()
 parser_create_stats.add_argument('user_pseudo', type=str, required=True, location='form')
 parser_create_stats.add_argument('score', type=int, location='form')

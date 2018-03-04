@@ -28,22 +28,30 @@ def createViews(api):
         'is_active': Boolean,
         'is_admin': Boolean,
     })
+    api.clone('UserRank', api.models['UserMin'],{
+        'mu': Float,
+        'sigma': Float,
+        'rank': Integer
+    })
     # ========================= SEASONS
     api.model('SeasonMin', {
         'id': Integer,
         'name': String,
         'running': Boolean,
     })
-    api.model('Season', {
-        'id': Integer,
-        'name': String,
+    api.clone('Season', api.models['SeasonMin'], {
         'start_time': DateTime(dt_format="iso8601"),
         'end_time': DateTime(dt_format="iso8601"),
         'max_time': TimeDelta,
         'played_matches': Integer,
         'max_matches': Integer,
-        'running': Boolean,
     })
+    # ========================= RANKINGS
+    api.model('Ranking',{
+        'users': List(Nested(api.models['UserRank'])),
+        'algo': String
+    })
+    api.clone('RankingSeason', api.models['Ranking'], api.models['Season'])
 
     # ========================= STATISTICS
     api.model('StatBase', {

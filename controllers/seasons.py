@@ -32,6 +32,39 @@ def show(season_id):
     return season
 
 
+def show_ranking(algo, season_id):
+    # TODO: Should be moved to its own controller: Algo
+    # TODO: Discover how to pass None as param for orm query and interpret it as NULL
+    if season_id is not None:
+        res = orm.to_json({ 
+            'musigma_team': orm.get_ranked_users_musigma_team_season
+        }[algo](season_id))
+    else:
+        res = orm.to_json({
+            'musigma_team': orm.get_ranked_users_musigma_team_global
+        }[algo]())
+
+    ranking = {
+        'id': res[0]['season_id'],
+        'name': res[0]['season_name'],
+        'start_time': res[0]['start_time'],
+        'end_time': res[0]['end_time'],
+        'max_time': res[0]['max_time'],
+        'played_matches': res[0]['played_matches'],
+        'max_matches': res[0]['max_matches'],
+        'running': res[0]['running'],
+        'algo': algo
+    }
+    ranking['users'] = [{ 'id': o['user_id'],
+                                'pseudo': o['pseudo'],
+                                'usual_pseudos': o['usual_pseudos'],
+                                'is_active': o['is_active'],
+                                'mu': o['mu'],
+                                'sigma': o['sigma'],
+                                'rank': o['rank'] } for o in res]
+    return ranking
+
+
 def delete(season_id):
     with orm.transaction():
         orm.terminate_season(season_id, datetime.datetime.now())
