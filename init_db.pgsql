@@ -10,7 +10,7 @@ CREATE TABLE users (
     is_active BOOLEAN DEFAULT true,
     usual_pseudos VARCHAR(50)[],
     is_admin BOOLEAN DEFAULT false,
-    password TEXT NOT NULL,
+    password TEXT,
     gold_stars INTEGER DEFAULT 0,
     silver_stars INTEGER DEFAULT 0,
     copper_stars INTEGER DEFAULT 0,
@@ -133,7 +133,25 @@ CREATE TABLE musigma_team (
 CREATE UNIQUE INDEX musigma_team_global_uni_idx ON musigma_team (user_id, match_id)
 WHERE season_id IS NULL;
 
--- POPULATE
+-- POPULATE ADMINS
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('yap', 'Yapus', true, crypt('107410', gen_salt('bf')));
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('frm', 'Covfefe', true, crypt('107410', gen_salt('bf')));
-INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'cousinVic', true, crypt('107410', gen_salt('bf')));
+INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'CousinVic', true, crypt('107410', gen_salt('bf')));
+
+-- POPULATE OTHERS
+INSERT INTO users (trigram, pseudo) VALUES ('pim', 'Pro');
+INSERT INTO users (trigram, pseudo) VALUES ('mav', 'Maxou');
+INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
+INSERT INTO users (trigram, pseudo) VALUES ('gub', 'Souillon');
+INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
+INSERT INTO users (trigram, pseudo) VALUES ('iss', 'Ekisomox');
+INSERT INTO users (trigram, pseudo) VALUES ('sal', 'TicketResto');
+INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky');
+INSERT INTO users (trigram, pseudo) VALUES ('clb', 'DataArtist');
+INSERT INTO users (trigram, pseudo) VALUES ('jec', 'Bouboule');
+INSERT INTO users (trigram, pseudo) VALUES ('wat', 'Jisk');
+INSERT INTO users (trigram, pseudo) VALUES ('baa', 'Batamanq');
+INSERT INTO users (trigram, pseudo) VALUES ('abd', 'Nulos');
+INSERT INTO users (trigram, pseudo) VALUES ('cea', 'Moules');
+INSERT INTO users (trigram, pseudo) VALUES ('hes', 'Ancestro');
+INSERT INTO users (trigram, pseudo) VALUES ('arf', 'Bogoss');

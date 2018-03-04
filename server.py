@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request
-from flask_restplus import Api, Resource
+from flask_restplus import Api, Resource, marshal
 from flask_restplus.inputs import datetime_from_iso8601
 from flask_jwt_extended import JWTManager, get_jwt_identity
 from flask_sslify import SSLify
@@ -142,13 +142,6 @@ class Match(Resource):
         return matches.delete(match_id)
 
 
-# @v1.route("/matches/<int:match_id>/stats")
-# class MatchStats(Resource):
-#     @api.marshal_with(api.models['StatMin'], as_list=True)
-#     def get(self, match_id):
-#         return matches_stats.index(match_id)
-
-
 @v1.route("/matches/pending")
 class MatchesPending(Resource):
     @api.marshal_with(api.models['MatchPending'], as_list=True)
@@ -228,6 +221,13 @@ class Season(Resource):
     @admin_required
     def delete(self, season_id):
         return seasons.delete(season_id)
+
+
+@v1.route("/seasons/current")
+class CurrentSeason(Resource):
+    @api.marshal_with(api.models['Season'])
+    def get(self):
+        return seasons.show_current()
 
 
 @v1.route("/seasons/<int:season_id>/matches")

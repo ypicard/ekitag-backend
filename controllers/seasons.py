@@ -35,14 +35,9 @@ def show(season_id):
 def show_ranking(algo, season_id):
     # TODO: Should be moved to its own controller: Algo
     # TODO: Discover how to pass None as param for orm query and interpret it as NULL
-    if season_id is not None:
-        res = orm.to_json({ 
-            'musigma_team': orm.get_ranked_users_musigma_team_season
-        }[algo](season_id))
-    else:
-        res = orm.to_json({
-            'musigma_team': orm.get_ranked_users_musigma_team_global
-        }[algo]())
+    res = orm.to_json({ 
+        'musigma_team': orm.get_ranked_users_musigma_team
+    }[algo](season_id))
 
     ranking = {
         'id': res[0]['season_id'],
