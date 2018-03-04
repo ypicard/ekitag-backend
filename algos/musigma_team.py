@@ -31,20 +31,17 @@ def set_trueskill_env(name):
 def get_trueskill_env(name):
     return configs[name]
 
-def update(r_ids, b_ids, r_score, b_score, match_id, season_id):
+
+def update(match_id, season_id, r_ids, b_ids, r_score, b_score):
 
     def get_rates(ids):
         # Get musigma user / create it if none
         res = []
         for user_id in ids:
-            if season_id is not None:
-                pl = orm.to_json(orm.get_user_musigma_team.first(user_id, season_id))
-            else: 
-                pl = orm.to_json(orm.get_user_musigma_team_global.first(user_id))
-            if pl is not None:
-                res.append(Rating(float(pl['mu']), float(pl['sigma'])))
-            else:
-                res.append(Rating())
+            pl = orm.to_json(orm.get_user_musigma_team.first(user_id, season_id))
+            rating = Rating(float(pl['mu']), float(pl['sigma'])) if pl is not None else Rating()
+            res.append(rating)
+            
         return res
 
     env_name = 'global' if not season_id else 'season'
@@ -61,23 +58,17 @@ def update(r_ids, b_ids, r_score, b_score, match_id, season_id):
     new_rates = new_r_rates + new_b_rates
     with orm.transaction():
         for idx, user_id in enumerate(r_ids + b_ids):
-            if season_id is None:
-                # This is a shitty hack beacuse upsert does not work with NULL values -> Delete record first, than recreate it with updated values.
-                orm.delete_user_musigma_team_global(user_id)
-            orm.upsert_user_musigma_team(user_id, new_rates[idx].mu, new_rates[idx].sigma, season_id)
-            orm.create_musigma_team_history(user_id, match_id, season_id, new_rates[idx].mu, new_rates[idx].sigma)
+            orm.create_user_musigma_team(user_id, match_id, season_id, new_rates[idx].mu, new_rates[idx].sigma)
 
 
-def show_next(season_id, ids):
-    if (len(ids) < 2):
-        abort(400, 'Not enough players')
-
+def show(ids, season_id):
+    
     env_name = 'global' if not season_id else 'season'
     set_trueskill_env(env_name)
     env = get_trueskill_env(env_name)
 
     players = { id: orm.to_json(orm.get_user_musigma_team.first(id, season_id)) for id in ids }
-    rates = {id: Rating(p['mu'], p['sigma']) if p is not None else Rating() for (id, p) in players.items()}
+    rates = { id: Rating(float(p['mu']), float(p['sigma'])) if p is not None else Rating() for (id, p) in players.items() }
 
     matches = get_all_possible_matches(ids)
     matches = [[{p: rates[p] for p in t} for t in m ] for m in matches]
@@ -86,8 +77,8 @@ def show_next(season_id, ids):
     qual, idx = min((_, idx) for (idx, _) in enumerate(qualities))
     
     match = matches[idx]
-    match = { 'r_ids': [id for id in match[0]],
-            'b_ids': [id for id in match[1]],
+    match = { 'r_ids': [user_id for user_id in match[0]],
+            'b_ids': [user_id for user_id in match[1]],
             'quality': qual }
     return match
 

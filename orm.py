@@ -247,14 +247,15 @@ terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2
 # create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
 # get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
 # get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
-get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
-get_user_musigma_team_global = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id IS NULL")
-update_user_musigma_team = db.prepare("UPDATE musigma_team SET mu = $2, sigma = $3 WHERE user_id = $1 AND season_id = $2")
-create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) RETURNING id")
-upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) "
-    "ON CONFLICT (user_id, season_id) DO UPDATE SET mu = $2, sigma = $3 "
-    "RETURNING *")
-delete_user_musigma_team_global = db.prepare("DELETE FROM MUSIGMA_TEAM WHERE user_id = $1 AND season_id IS NULL")
+get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND (season_id = $2 OR season_id IS NULL) ORDER BY id DESC LIMIT 1")
+# get_user_musigma_team_global = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id IS NULL ORDER BY id DESC LIMIT 1")
+create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
+# update_user_musigma_team = db.prepare("UPDATE musigma_team SET mu = $2, sigma = $3 WHERE user_id = $1 AND season_id = $2")
+# create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) RETURNING id")
+# upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) "
+    # "ON CONFLICT (user_id, season_id) DO UPDATE SET mu = $2, sigma = $3 "
+    # "RETURNING *")
+# delete_user_musigma_team_global = db.prepare("DELETE FROM MUSIGMA_TEAM WHERE user_id = $1 AND season_id IS NULL")
 # create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
 # create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
 # get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
@@ -263,7 +264,7 @@ delete_user_musigma_team_global = db.prepare("DELETE FROM MUSIGMA_TEAM WHERE use
 # update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
 
 # ------------------------- µσ-ranking history
-create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
+# create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 
 # ========================= UTILS
 # ROW CONVERTER MONKEY PATCHING

@@ -119,26 +119,27 @@ CREATE TABLE statistics_pending (
 CREATE TABLE musigma_team (
     id serial PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    season_id INTEGER REFERENCES seasons(id) NOT NULL DEFAULT -1,
+    season_id INTEGER REFERENCES seasons(id),
+    match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
     mu DECIMAL NOT NULL,
     sigma DECIMAL NOT NULL,
-    UNIQUE (user_id, season_id)
+    UNIQUE (user_id, season_id, match_id)
 );
 
 -- TO ALLOW ONLY ONE (USER_ID, NULL_SEASON_ID) ROW
-CREATE UNIQUE INDEX musigma_team_global_uni_idx ON musigma_team (user_id)
-WHERE season_id IS NULL;
+-- CREATE UNIQUE INDEX musigma_team_global_uni_idx ON musigma_team (user_id, match_id)
+-- WHERE season_id IS NULL;
 
--- MUSIGMA TEAM HISTORY
-CREATE TABLE musigma_team_history (
-    id serial PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
-    season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
-    mu DECIMAL NOT NULL,
-    sigma DECIMAL NOT NULL,
-    UNIQUE (user_id, match_id, season_id)
-);
+-- -- MUSIGMA TEAM HISTORY
+-- CREATE TABLE musigma_team_history (
+--     id serial PRIMARY KEY,
+--     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--     match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
+--     season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
+--     mu DECIMAL NOT NULL,
+--     sigma DECIMAL NOT NULL,
+--     UNIQUE (user_id, match_id, season_id)
+-- );
 
 -- POPULATE
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('yap', 'Yapus', true, crypt('107410', gen_salt('bf')));

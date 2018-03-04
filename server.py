@@ -13,7 +13,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, musigma_team
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos
 
 # ========================= INIT
 
@@ -244,9 +244,7 @@ class Algo(Resource):
     @api.expect(parser_algo_get)
     def get(self, algo):
         args = parser_algo_get.parse_args()
-        cur_season = orm.to_json(orm.get_running_season.first())
-        cur_season_id = cur_season['id'] if cur_season else None
-        return { 'musigma_team': musigma_team.show_next }[algo](cur_season_id, args['ids'])
+        return algos.show(algo, args['ids'])
 
 @v1.route("/algo/<string:algo>/ranking")
 class Ranking(Resource):

@@ -6,7 +6,7 @@ from . import matches_stats as matches_stats_controller
 from . import matchespending_stats as matchespending_stats_controller
 from . import seasons as seasons_controller
 from . import seasons_matches as seasons_matches_controller
-from . import musigma_team as musigma_team_controller
+from . import algos as algos_controller
 from flask_restplus import abort
 
 # from flask_jwt_extended import create_access_token
@@ -109,19 +109,14 @@ def convert(match_id, validator):
 
             matchespending_stats_controller.delete_all(new_match_id)
             delete(match_id)
-            season = seasons_controller.show_current()
-            # Update global algo
-            musigma_team_controller.update(ids['r'],
-                                            ids['b'],
-                                            pending_match['r_score'],
-                                            pending_match['b_score'], new_match_id, None)
-            if season is not None:
-                seasons_matches_controller.create(season['id'], new_match_id)
-                # Update season algo
-                musigma_team_controller.update(ids['r'],
-                                            ids['b'],
-                                            pending_match['r_score'],
-                                            pending_match['b_score'], new_match_id, season['id'])
+
+            # Update algo
+            # TODO: All player stats will probably need to be passed here to update algo
+            algos_controller.update(new_match_id, 
+                                    r_ids=ids['r'],
+                                    b_ids=ids['b'],
+                                    r_score=pending_match['r_score'],
+                                    b_score=pending_match['b_score'])
             
     except postgresql.exceptions.ForeignKeyError:
         abort(400, "Something failed. Confident in all user ids ?")
