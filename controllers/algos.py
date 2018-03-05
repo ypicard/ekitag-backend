@@ -5,7 +5,12 @@ from flask_restplus import abort
 from algos import musigma_team
 import postgresql.exceptions
 
-def show(algo, ids):
+
+def show(algo, user_id, season_id):
+    show_func = {'musigma_team': orm.get_user_musigma_team}[algo]
+    return orm.to_json(show_func(user_id, season_id))
+
+def run(algo, ids):
     if (len(ids) < 2):
         abort(400, 'Not enough players')
     cur_season = orm.to_json(orm.get_running_season.first())
@@ -29,3 +34,19 @@ def update(match_id, **kwargs):
     return {
         'message': 'Algos updated'
     }
+
+
+def index(algo, season_id):
+    # TODO: Discover how to pass None as param for orm query and interpret it as NULL
+    res = orm.to_json({
+        'musigma_team': orm.get_ranked_users_musigma_team
+    }[algo](season_id))
+
+    ranking = {'users': [{'id': o['user_id'],
+                          'pseudo': o['pseudo'],
+                          'usual_pseudos': o['usual_pseudos'],
+                          'is_active': o['is_active'],
+                          'mu': o['mu'],
+                          'sigma': o['sigma'],
+                          'rank': o['rank']} for o in res]}
+    return ranking

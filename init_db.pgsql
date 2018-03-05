@@ -13,7 +13,7 @@ CREATE TABLE users (
     password TEXT,
     gold_stars INTEGER DEFAULT 0,
     silver_stars INTEGER DEFAULT 0,
-    copper_stars INTEGER DEFAULT 0,
+    bronze_stars INTEGER DEFAULT 0,
     loser_stars INTEGER DEFAULT 0
 );
 

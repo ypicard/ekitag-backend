@@ -244,17 +244,22 @@ class Algo(Resource):
     @api.expect(parser_algo_get)
     def get(self, algo):
         args = parser_algo_get.parse_args()
-        return algos.show(algo, args['ids'])
+        return algos.run(algo, args['ids'])
 
-@v1.route("/algo/<string:algo>/ranking")
-class Ranking(Resource):
-    @api.marshal_with(api.models['Ranking'])
+
+@v1.route("/algo/<string:algo>/users")
+class AlgoUsers(Resource):
+    @api.marshal_with(api.models['AlgoUsers'])
+    @api.expect(parser_algo_users_get)
     def get(self, algo):
-        return seasons.show_ranking(algo, None)
+        args = parser_algo_users_get.parse_args()
+        return algos.index(algo, args['season_id'])
 
 
-@v1.route("/algo/<string:algo>/ranking/<int:season_id>")
-class RankingSeason(Resource):
-    @api.marshal_with(api.models['RankingSeason'])
-    def get(self, algo, season_id):
-        return seasons.show_ranking(algo, season_id)
+@v1.route("/algo/<string:algo>/users/<int:user_id>")
+class AlgoUser(Resource):
+    @api.marshal_with(api.models['AlgoUserMin'])
+    @api.expect(parser_algo_users_get)
+    def get(self, algo, user_id):
+        args = parser_algo_users_get.parse_args()
+        return algos.show(algo, user_id, args['season_id'])

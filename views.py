@@ -23,16 +23,12 @@ def createViews(api):
     api.clone('User', api.models['UserMin'], {
         'gold_stars': Integer,
         'silver_stars': Integer,
-        'copper_stars': Integer,
+        'bronze_stars': Integer,
         'loser_stars': Integer,
         'is_active': Boolean,
         'is_admin': Boolean,
     })
-    api.clone('UserRank', api.models['UserMin'],{
-        'mu': Float,
-        'sigma': Float,
-        'rank': Integer
-    })
+ 
     # ========================= SEASONS
     api.model('SeasonMin', {
         'id': Integer,
@@ -46,12 +42,16 @@ def createViews(api):
         'played_matches': Integer,
         'max_matches': Integer,
     })
-    # ========================= RANKINGS
-    api.model('Ranking',{
-        'users': List(Nested(api.models['UserRank'])),
-        'algo': String
+    # ========================= ALGO
+    api.model('AlgoUserMin', {
+           'mu': Float,
+           'sigma': Float,
+           'rank': Integer
+       })
+    api.clone('AlgoUser', api.models['UserMin'])
+    api.model('AlgoUsers', {
+        'users': List(Nested(api.models['AlgoUser'])),
     })
-    api.clone('RankingSeason', api.models['Ranking'], api.models['Season'])
 
     # ========================= STATISTICS
     api.model('StatBase', {
