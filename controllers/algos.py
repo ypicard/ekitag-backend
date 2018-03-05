@@ -42,7 +42,8 @@ def index(algo, season_id):
         'musigma_team': orm.get_ranked_users_musigma_team
     }[algo](season_id))
 
-    ranking = {'users': [{'id': o['user_id'],
+    ranking = { 'algo': algo,
+                'users': [{'id': o['user_id'],
                           'pseudo': o['pseudo'],
                           'usual_pseudos': o['usual_pseudos'],
                           'is_active': o['is_active'],

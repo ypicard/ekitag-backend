@@ -48,10 +48,11 @@ def createViews(api):
            'sigma': Float,
            'rank': Integer
        })
-    api.clone('AlgoUser', api.models['UserMin'])
+    api.clone('AlgoUser', api.models['UserMin'], api.models['AlgoUserMin'])
     api.model('AlgoUsers', {
+        'algo': String,
         'users': List(Nested(api.models['AlgoUser'])),
-    })
+        })
 
     # ========================= STATISTICS
     api.model('StatBase', {
