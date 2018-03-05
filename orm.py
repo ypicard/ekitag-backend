@@ -137,13 +137,22 @@ get_user_matches = db.prepare(
     "r4_id = $1 OR "
     "r5_id = $1 OR "
     "r6_id = $1")
-get_ranked_users_musigma_team = db.prepare(
-    "SELECT users.id AS user_id, users.pseudo, users.usual_pseudos, users.is_active, rank() OVER (ORDER BY mu DESC) AS rank, "
-    "season_id, seasons.name AS season_name, start_time, end_time, max_time, played_matches, max_matches, running, "
-    "mu, sigma FROM musigma_team "
-    "LEFT JOIN users ON users.id = musigma_team.user_id "
-    "LEFT JOIN seasons on seasons.id = musigma_team.season_id "
-    "WHERE (season_id = $1 OR ($1 IS NULL AND season_id IS NULL))"
+
+get_ranked_users_musigma_team = db.prepare('''
+    SELECT  *, RANK() OVER (ORDER BY t1.mu DESC)
+    FROM musigma_team AS t1
+    INNER JOIN(
+        SELECT  MAX(mu) AS max_mu,
+        user_id
+        FROM    musigma_team
+        WHERE (season_id = $1 OR ($1 IS NULL AND season_id IS NULL))
+        GROUP BY user_id
+    ) AS t2
+    ON  t2.user_id=t1.user_id
+    AND t2.max_mu=t1.mu
+    LEFT JOIN users ON users.id=t1.user_id
+    ORDER BY t1.mu DESC;
+'''
 )
 create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
@@ -254,7 +263,22 @@ create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_
 # get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
 # update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
 # update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
+# https://stackoverflow.com/questions/1313120/retrieving-the-last-record-in-each-group
 
+get_all_user_musigma_rankings = db.prepare('''
+    SELECT * FROM (
+        SELECT  t1.*, RANK() OVER (PARTITION BY season_id ORDER BY t1.mu DESC)
+        FROM musigma_team AS t1
+        INNER JOIN (
+            SELECT  MAX(mu) AS max_mu, user_id
+            FROM    musigma_team
+            GROUP BY user_id, season_id
+        ) AS t2
+        ON  t2.user_id = t1.user_id
+        AND t2.max_mu = t1.mu
+    ) AS res
+    WHERE user_id = $1
+    ''')
 # ------------------------- µσ-ranking history
 # create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 

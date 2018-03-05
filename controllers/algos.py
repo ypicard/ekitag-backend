@@ -6,9 +6,9 @@ from algos import musigma_team
 import postgresql.exceptions
 
 
-def show(algo, user_id, season_id):
-    show_func = {'musigma_team': orm.get_user_musigma_team}[algo]
-    return orm.to_json(show_func(user_id, season_id))
+def show(algo, user_id):
+    show_func = {'musigma_team': orm.get_all_user_musigma_rankings}[algo]
+    return orm.to_json(show_func(user_id))
 
 def run(algo, ids):
     if (len(ids) < 2):
@@ -37,7 +37,6 @@ def update(match_id, **kwargs):
 
 
 def index(algo, season_id):
-    # TODO: Discover how to pass None as param for orm query and interpret it as NULL
     res = orm.to_json({
         'musigma_team': orm.get_ranked_users_musigma_team
     }[algo](season_id))

@@ -258,8 +258,6 @@ class AlgoUsers(Resource):
 
 @v1.route("/algo/<string:algo>/users/<int:user_id>")
 class AlgoUser(Resource):
-    @api.marshal_with(api.models['AlgoUserMin'])
-    @api.expect(parser_algo_users_get)
+    @api.marshal_with(api.models['AlgoUserAll'])
     def get(self, algo, user_id):
-        args = parser_algo_users_get.parse_args()
-        return algos.show(algo, user_id, args['season_id'])
+        return algos.show(algo, user_id)
