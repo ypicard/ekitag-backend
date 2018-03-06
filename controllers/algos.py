@@ -8,14 +8,14 @@ import postgresql.exceptions
 
 def show(algo, user_id):
     show_func = {'musigma_team': orm.get_all_user_musigma_rankings}[algo]
-    return orm.to_json(show_func(user_id))
+    return { 'rankings': orm.to_json(show_func(user_id)) }
 
 def run(algo, ids):
     if (len(ids) < 2):
         abort(400, 'Not enough players')
     cur_season = orm.to_json(orm.get_running_season.first())
     cur_season_id = cur_season['id'] if cur_season else None
-    return {'musigma_team': musigma_team.show}[algo](ids, cur_season_id)
+    return { 'rankings': musigma_team.show }[algo](ids, cur_season_id)
 
 
 def update(match_id, **kwargs):

@@ -263,8 +263,6 @@ create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_
 # get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
 # update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
 # update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
-# https://stackoverflow.com/questions/1313120/retrieving-the-last-record-in-each-group
-
 get_all_user_musigma_rankings = db.prepare('''
     SELECT * FROM (
         SELECT  t1.*, RANK() OVER (PARTITION BY season_id ORDER BY t1.mu DESC)
@@ -278,6 +276,7 @@ get_all_user_musigma_rankings = db.prepare('''
         AND t2.max_mu = t1.mu
     ) AS res
     WHERE user_id = $1
+    ORDER BY season_id DESC
     ''')
 # ------------------------- µσ-ranking history
 # create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")

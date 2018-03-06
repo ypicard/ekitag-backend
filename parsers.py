@@ -58,3 +58,6 @@ parser_create_season.add_argument('max_matches', type=int, location='form')
 
 parser_algo_get = reqparse.RequestParser()
 parser_algo_get.add_argument('ids', type=int, required=True, action='append', location='args')
+
+parser_algo_users_get = reqparse.RequestParser()
+parser_algo_users_get.add_argument('season_id', type=int, location='args')
