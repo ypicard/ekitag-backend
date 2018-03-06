@@ -55,6 +55,7 @@ def createViews(api):
         })
     api.clone('AlgoUserMinSeason', api.models['AlgoUserMin'], {
         'season_id': Integer,
+        'season_name': String
     })
     api.model('AlgoUserAll',  {
         'rankings': List(Nested(api.models['AlgoUserMinSeason']))
