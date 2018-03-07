@@ -110,6 +110,11 @@ def convert(match_id, validator):
             matchespending_stats_controller.delete_all(new_match_id)
             delete(match_id)
 
+            # Link match to season
+            season = seasons_controller.show_current()
+            if season is not None:
+                seasons_matches_controller.create(season['id'], new_match_id)
+
             # Update algo
             # TODO: All player stats will probably need to be passed here to update algo
             algos_controller.update(new_match_id, 
