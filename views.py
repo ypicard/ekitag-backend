@@ -46,6 +46,7 @@ def createViews(api):
     api.model('AlgoUserMin', {
            'mu': Float,
            'sigma': Float,
+           'exposition': Float,
            'rank': Integer
        })
     api.clone('AlgoUser', api.models['UserMin'], api.models['AlgoUserMin'])

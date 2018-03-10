@@ -139,19 +139,19 @@ get_user_matches = db.prepare(
     "r6_id = $1")
 
 get_ranked_users_musigma_team = db.prepare('''
-    SELECT  *, RANK() OVER (ORDER BY t1.mu DESC)
+    SELECT *, RANK() OVER (ORDER BY t1.exposition DESC)
     FROM musigma_team AS t1
     INNER JOIN(
-        SELECT  MAX(mu) AS max_mu,
+        SELECT  MAX(exposition) AS max_exposition,
         user_id
-        FROM    musigma_team
+        FROM musigma_team
         WHERE (season_id = $1 OR ($1 IS NULL AND season_id IS NULL))
         GROUP BY user_id
     ) AS t2
-    ON  t2.user_id=t1.user_id
-    AND t2.max_mu=t1.mu
-    LEFT JOIN users ON users.id=t1.user_id
-    ORDER BY t1.mu DESC;
+    ON t2.user_id = t1.user_id
+    AND t2.max_exposition = t1.exposition
+    LEFT JOIN users ON users.id = t1.user_id
+    ORDER BY t1.exposition DESC;
 '''
 )
 create_stats = db.prepare(
@@ -250,7 +250,7 @@ terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2
 # get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
 get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND (season_id = $2 OR ($2 IS NULL AND season_id IS NULL)) ORDER BY id DESC LIMIT 1")
 # get_user_musigma_team_global = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id IS NULL ORDER BY id DESC LIMIT 1")
-create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
+create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_id, season_id, exposition, mu, sigma) VALUES ($1, $2, $3, $4, $5, $6)")
 # update_user_musigma_team = db.prepare("UPDATE musigma_team SET mu = $2, sigma = $3 WHERE user_id = $1 AND season_id = $2")
 # create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) RETURNING id")
 # upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) "

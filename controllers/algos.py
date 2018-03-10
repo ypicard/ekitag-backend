@@ -46,6 +46,7 @@ def index(algo, season_id):
                           'pseudo': o['pseudo'],
                           'usual_pseudos': o['usual_pseudos'],
                           'is_active': o['is_active'],
+                          'exposition': o['exposition'],
                           'mu': o['mu'],
                           'sigma': o['sigma'],
                           'rank': o['rank']} for o in res]}
