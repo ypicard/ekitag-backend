@@ -124,6 +124,7 @@ CREATE TABLE musigma_team (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
     match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
+    exposition DECIMAL NOT NULL,
     mu DECIMAL NOT NULL,
     sigma DECIMAL NOT NULL,
     UNIQUE (user_id, season_id, match_id)
@@ -136,7 +137,7 @@ WHERE season_id IS NULL;
 -- POPULATE ADMINS
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('yap', 'Yapus', true, crypt('107410', gen_salt('bf')));
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('frm', 'Covfefe', true, crypt('107410', gen_salt('bf')));
-INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'CousinVic', true, crypt('107410', gen_salt('bf')));
+INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'cousinVic', true, crypt('107410', gen_salt('bf')));
 
 -- POPULATE OTHERS
 INSERT INTO users (trigram, pseudo) VALUES ('pim', 'Pro');
@@ -145,11 +146,11 @@ INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
 INSERT INTO users (trigram, pseudo) VALUES ('gub', 'Souillon');
 INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
 INSERT INTO users (trigram, pseudo) VALUES ('iss', 'Ekisomox');
-INSERT INTO users (trigram, pseudo) VALUES ('sal', 'TicketResto');
+INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ticket Resto');
 INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky');
 INSERT INTO users (trigram, pseudo) VALUES ('clb', 'DataArtist');
-INSERT INTO users (trigram, pseudo) VALUES ('jec', 'Bouboule');
-INSERT INTO users (trigram, pseudo) VALUES ('wat', 'Jisk');
+INSERT INTO users (trigram, pseudo) VALUES ('jec', 'The Bouboule');
+INSERT INTO users (trigram, pseudo) VALUES ('wat', 'JiSK');
 INSERT INTO users (trigram, pseudo) VALUES ('baa', 'Batamanq');
 INSERT INTO users (trigram, pseudo) VALUES ('abd', 'Nulos');
 INSERT INTO users (trigram, pseudo) VALUES ('cea', 'Moules');
