@@ -8,8 +8,6 @@ from . import seasons as seasons_controller
 from . import seasons_matches as seasons_matches_controller
 from . import algos as algos_controller
 from flask_restplus import abort
-
-# from flask_jwt_extended import create_access_token
 import postgresql.exceptions
 
 
@@ -61,14 +59,16 @@ def convert(match_id, validator):
     for team in ['r', 'b']:
         for idx in range(1, 7):
             pseudo = pending_match[team + str(idx)]['user_pseudo']
-            if pseudo:
-                player = orm.to_json(orm.get_user_by_pseudo.first(pseudo))
-                if player is None:
-                    abort(400, 'User ' + pseudo + ' does not exist')
-                pending_match[team + str(idx)]['user_id'] = player['id']
-                ids[team].append(player['id'])
-            else:
-                pending_match[team + str(idx)] = None		
+            if pseudo is None:
+                pending_match[team + str(idx)] = None
+                continue
+
+            player = orm.to_json(orm.get_user_by_pseudo.first(pseudo))
+            if player is None:
+                abort(400, "Pseudo {} can't be matched against existing players".format(pseudo))
+            pending_match[team + str(idx)]['user_id'] = player['id']
+            ids[team].append(player['id'])
+                
     try:
         with orm.transaction():
             new_match_id = matches_controller.create(pending_match['b_score'],
@@ -92,20 +92,21 @@ def convert(match_id, validator):
             for team in ['r', 'b']:
                 for idx in range(1, 7):
                     player = pending_match[team + str(idx)]
-                    if player:
-                        matches_stats_controller.create(new_match_id,
-                                                player['user_id'],
-                                                player['score'],
-                                                player['tags'],
-                                                player['popped'],
-                                                player['grabs'],
-                                                player['drops'],
-                                                player['hold'],
-                                                player['captures'],
-                                                player['prevent'],
-                                                player['returns'],
-                                                player['support'],
-                                                player['pups'])
+                    if player is None:
+                        continue
+                    matches_stats_controller.create(new_match_id,
+                                            player['user_id'],
+                                            player['score'],
+                                            player['tags'],
+                                            player['popped'],
+                                            player['grabs'],
+                                            player['drops'],
+                                            player['hold'],
+                                            player['captures'],
+                                            player['prevent'],
+                                            player['returns'],
+                                            player['support'],
+                                            player['pups'])
 
             matchespending_stats_controller.delete_all(new_match_id)
             delete(match_id)
