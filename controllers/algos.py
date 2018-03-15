@@ -15,7 +15,7 @@ def run(algo, ids):
         abort(400, 'Not enough players')
     cur_season = orm.to_json(orm.get_running_season.first())
     cur_season_id = cur_season['id'] if cur_season else None
-    return { 'rankings': musigma_team.show }[algo](ids, cur_season_id)
+    return {'musigma_team': musigma_team.show}[algo](ids, cur_season_id)
 
 
 def update(match_id, **kwargs):
