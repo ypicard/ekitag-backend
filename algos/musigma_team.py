@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from trueskill import TrueSkill, Rating, rate
+from trueskill import TrueSkill, Rating, rate, expose
 from config import musigma_team_global, musigma_team_season
 import itertools
 import orm
@@ -56,9 +56,11 @@ def update(match_id, season_id, r_ids, b_ids, r_score, b_score):
     new_r_rates, new_b_rates = rate([r_rates, b_rates], ranks=[b_score, r_score]) # Lower is better
 
     new_rates = new_r_rates + new_b_rates
+    new_expositions = [expose(r) for r in new_rates]
+
     with orm.transaction():
         for idx, user_id in enumerate(r_ids + b_ids):
-            orm.create_user_musigma_team(user_id, match_id, season_id, new_rates[idx].mu, new_rates[idx].sigma)
+            orm.create_user_musigma_team(user_id, match_id, season_id, new_expositions[idx], new_rates[idx].mu, new_rates[idx].sigma)
 
 
 def show(ids, season_id):

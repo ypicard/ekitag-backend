@@ -124,6 +124,7 @@ CREATE TABLE musigma_team (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
     match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
+    exposition DECIMAL NOT NULL,
     mu DECIMAL NOT NULL,
     sigma DECIMAL NOT NULL,
     UNIQUE (user_id, season_id, match_id)
@@ -145,11 +146,11 @@ INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
 INSERT INTO users (trigram, pseudo) VALUES ('gub', 'SuperSouyon');
 INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
 INSERT INTO users (trigram, pseudo) VALUES ('iss', 'Ekisomox');
-INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ballsdeep');
+INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ticket Resto');
 INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky');
 INSERT INTO users (trigram, pseudo) VALUES ('clb', 'DataArtist');
-INSERT INTO users (trigram, pseudo) VALUES ('jec', 'Bouboule');
-INSERT INTO users (trigram, pseudo) VALUES ('wat', 'Jisk');
+INSERT INTO users (trigram, pseudo) VALUES ('jec', 'The Bouboule');
+INSERT INTO users (trigram, pseudo) VALUES ('wat', 'JiSK');
 INSERT INTO users (trigram, pseudo) VALUES ('baa', 'Batamanq');
 INSERT INTO users (trigram, pseudo) VALUES ('abd', 'Nulos');
 INSERT INTO users (trigram, pseudo) VALUES ('cea', 'Moules');

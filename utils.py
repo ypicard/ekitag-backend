@@ -1,5 +1,6 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
+from jwt import ExpiredSignatureError
 from functools import wraps
 from flask_restplus import abort
 
@@ -12,7 +13,7 @@ def jwt_required_silent(function):
     def wrapper(*args, **kwargs):
         try:
             return jwt_required(function)(*args, **kwargs)
-        except (NoAuthorizationError, InvalidHeaderError):
+        except (NoAuthorizationError, InvalidHeaderError, ExpiredSignatureError):
             return abort(401)
     return wrapper
 
