@@ -141,13 +141,13 @@ INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'cousinVi
 
 -- POPULATE OTHERS
 INSERT INTO users (trigram, pseudo) VALUES ('pim', 'Pro');
-INSERT INTO users (trigram, pseudo) VALUES ('mav', 'Maxou');
+INSERT INTO users (trigram, pseudo) VALUES ('mav', '\MuteAll');
 INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
 INSERT INTO users (trigram, pseudo) VALUES ('gub', 'Souillon');
 INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
-INSERT INTO users (trigram, pseudo) VALUES ('iss', 'Ekisomox');
+INSERT INTO users (trigram, pseudo) VALUES ('iss', 'ekisomox');
 INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ticket Resto');
-INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky');
+INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky Numa');
 INSERT INTO users (trigram, pseudo) VALUES ('clb', 'DataArtist');
 INSERT INTO users (trigram, pseudo) VALUES ('jec', 'The Bouboule');
 INSERT INTO users (trigram, pseudo) VALUES ('wat', 'JiSK');
