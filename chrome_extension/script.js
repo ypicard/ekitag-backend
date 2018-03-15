@@ -100,13 +100,24 @@ var matchDataRequest = new XMLHttpRequest();
 console.log('Sending request...');
 matchDataRequest.open('POST', apiBaseUrl + 'matches/pending', true);
 matchDataRequest.onreadystatechange = function () {
+  console.log("passed matchDataRequest.onreadystatechange");
+  console.log(this.readyState);
+  console.log(this.status);
+  console.log(this);
+  // TO Remove
+  var response = JSON.parse(matchDataRequest.response)
+  console.log(response);
   if (this.readyState == 4 && this.status == 200) {
+    console.log("passed this.readyState=4");
     var response = JSON.parse(matchDataRequest.response)
+    console.log(response);
     var matchId = response.value;
+    console.log(matchId);
 
     // Send one request per player stats
     var confirmedPlayers = 0;
     playersStats.forEach(function (player) {
+      console.log(player);
 
       var statsFormData = new FormData();
       for (var key in player) {
@@ -116,9 +127,12 @@ matchDataRequest.onreadystatechange = function () {
       var statRequest = new XMLHttpRequest();
       statRequest.open('POST', apiBaseUrl + 'matches/pending/' + matchId + '/stats', true);
       statRequest.onreadystatechange = function () {
+        console.log("passed second state change");
 
         if (this.readyState == 4 && this.status == 200) {
+          console.log("passed readyState");
           confirmedPlayers += 1;
+          console.log(confirmedPlayers);
           if (confirmedPlayers == playerStats.length) {
             alert("Succesfully sent match !")
           }

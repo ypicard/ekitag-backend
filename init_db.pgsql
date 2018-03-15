@@ -136,16 +136,16 @@ WHERE season_id IS NULL;
 -- POPULATE ADMINS
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('yap', 'Yapus', true, crypt('107410', gen_salt('bf')));
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('frm', 'Covfefe', true, crypt('107410', gen_salt('bf')));
-INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'CousinVic', true, crypt('107410', gen_salt('bf')));
+INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'cousinVic', true, crypt('107410', gen_salt('bf')));
 
 -- POPULATE OTHERS
 INSERT INTO users (trigram, pseudo) VALUES ('pim', 'Pro');
 INSERT INTO users (trigram, pseudo) VALUES ('mav', 'Maxou');
 INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
-INSERT INTO users (trigram, pseudo) VALUES ('gub', 'Souillon');
+INSERT INTO users (trigram, pseudo) VALUES ('gub', 'SuperSouyon');
 INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
 INSERT INTO users (trigram, pseudo) VALUES ('iss', 'Ekisomox');
-INSERT INTO users (trigram, pseudo) VALUES ('sal', 'TicketResto');
+INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ballsdeep');
 INSERT INTO users (trigram, pseudo) VALUES ('mad', 'Fonky');
 INSERT INTO users (trigram, pseudo) VALUES ('clb', 'DataArtist');
 INSERT INTO users (trigram, pseudo) VALUES ('jec', 'Bouboule');
