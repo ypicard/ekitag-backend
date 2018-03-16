@@ -279,6 +279,12 @@ get_all_user_musigma_rankings = db.prepare('''
     WHERE user_id = $1
     ORDER BY season_id DESC
     ''')
+get_user_musigma_team_history = db.prepare('''
+    SELECT musigma_team.*, m.datetime FROM musigma_team
+    LEFT JOIN matches AS m ON m.id = musigma_team.match_id
+    WHERE user_id = $1
+    ORDER BY season_id, match_id DESC;
+''')
 # ------------------------- µσ-ranking history
 # create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 

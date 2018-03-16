@@ -51,3 +51,13 @@ def index(algo, season_id):
                           'sigma': o['sigma'],
                           'rank': o['rank']} for o in res]}
     return ranking
+
+
+def viz(algo, user_id, viz):
+    # Put your different viz requests here
+    res = orm.to_json({
+        'musigma_team':{
+            'history': orm.get_user_musigma_team_history
+        }
+    }[algo][viz](user_id))
+    return { viz: res }

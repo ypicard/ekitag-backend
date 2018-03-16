@@ -260,3 +260,12 @@ class AlgoUser(Resource):
     @api.marshal_with(api.models['AlgoUserAll'])
     def get(self, algo, user_id):
         return algos.show(algo, user_id)
+
+
+@v1.route("/algo/<string:algo>/users/<int:user_id>/<string:viz>")
+class AlgoUserViz(Resource):
+    @api.marshal_with(api.models['AlgoUserVizHistory'])
+    def get(self, algo, user_id, viz):
+        return algos.viz(algo, user_id, viz)
+
+
