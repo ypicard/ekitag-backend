@@ -19,9 +19,10 @@ def index():
 
 
 def create(b_score, r_score, duration, datetime, b1_pseudo, b2_pseudo, b3_pseudo, b4_pseudo, b5_pseudo, b6_pseudo, r1_pseudo, r2_pseudo, r3_pseudo, r4_pseudo, r5_pseudo, r6_pseudo):
+    print("FDP")
     if b1_pseudo is None or r1_pseudo is None:
         abort(403, 'Each team must have at lease one player.')
-    
+
     # Check if match hasn't been submitted already
     last_match = orm.to_json(orm.get_last_pending_match.first())
     if last_match is not None and last_match['b_score'] == b_score and last_match['r_score'] == r_score and last_match['b1_pseudo'] == b1_pseudo and last_match['r1_pseudo'] == r1_pseudo and last_match['b2_pseudo'] == b2_pseudo and last_match['r2_pseudo'] == r2_pseudo and last_match['b3_pseudo'] == b3_pseudo and last_match['r3_pseudo'] == r3_pseudo:
@@ -68,7 +69,7 @@ def convert(match_id, validator):
                 abort(400, "Pseudo {} can't be matched against existing players".format(pseudo))
             pending_match[team + str(idx)]['user_id'] = player['id']
             ids[team].append(player['id'])
-                
+
     try:
         with orm.transaction():
             new_match_id = matches_controller.create(pending_match['b_score'],
@@ -88,7 +89,7 @@ def convert(match_id, validator):
                                                      pending_match['r5']['user_id'] if pending_match['r5'] else None,
                                                      pending_match['r6']['user_id'] if pending_match['r6'] else None,
                                                      validator)['value']
-            
+
             for team in ['r', 'b']:
                 for idx in range(1, 7):
                     player = pending_match[team + str(idx)]
@@ -118,12 +119,12 @@ def convert(match_id, validator):
 
             # Update algo
             # TODO: All player stats will probably need to be passed here to update algo
-            algos_controller.update(new_match_id, 
+            algos_controller.update(new_match_id,
                                     r_ids=ids['r'],
                                     b_ids=ids['b'],
                                     r_score=pending_match['r_score'],
                                     b_score=pending_match['b_score'])
-            
+
     except postgresql.exceptions.ForeignKeyError:
         abort(400, "Something failed. Confident in all user ids ?")
     return {

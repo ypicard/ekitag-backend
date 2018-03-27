@@ -180,7 +180,6 @@ class MatchPendingStats(Resource):
     # @api.marshal_with(api.models['StatMin'], as_list=True)
     # def get(self, match_id):
     #     return matchespending_stats.index(match_id)
-
     @api.marshal_with(api.models['Message'])
     @api.expect(parser_create_stats)
     def post(self, match_id):
@@ -189,7 +188,7 @@ class MatchPendingStats(Resource):
             args['hold'] = datetime.timedelta(seconds=args['hold'])
         if args['prevent']:
             args['prevent'] = datetime.timedelta(seconds=args['prevent'])
-        
+
         return matchespending_stats.create(match_id, **args)
 
 
