@@ -265,15 +265,15 @@ create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_
 # update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
 get_all_user_musigma_rankings = db.prepare('''
     SELECT res.*, seasons.name AS season_name FROM (
-        SELECT  t1.*, RANK() OVER (PARTITION BY season_id ORDER BY t1.mu DESC)
+        SELECT  t1.*, RANK() OVER (PARTITION BY season_id ORDER BY t1.exposition DESC)
         FROM musigma_team AS t1
         INNER JOIN (
-            SELECT  MAX(mu) AS max_mu, user_id
-            FROM    musigma_team
+            SELECT MAX(exposition) AS max_exposition, user_id
+            FROM musigma_team
             GROUP BY user_id, season_id
         ) AS t2
         ON  t2.user_id = t1.user_id
-        AND t2.max_mu = t1.mu
+        AND t2.max_exposition = t1.exposition
     ) AS res
     LEFT JOIN seasons on seasons.id = res.season_id
     WHERE user_id = $1
