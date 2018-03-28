@@ -95,14 +95,16 @@ for (var key in matchData) {
   matchFormData.append(key, matchData[key]);
 }
 
-// BUILD MATCH REQUEST
 var matchDataRequest = new XMLHttpRequest();
 console.log('Sending request...');
 matchDataRequest.open('POST', apiBaseUrl + 'matches/pending', true);
 matchDataRequest.onreadystatechange = function () {
+  console.log("passed matchDataRequest.onreadystatechange");
+  // console.log("this: " + this); this = XMLHttpRequest
+  console.log("this.readyState: " + this.readyState);
+  console.log("this.status: " + this.status);
   // TO Remove
   var response = JSON.parse(matchDataRequest.response)
-
   if (this.readyState == 4 && this.status == 200) {
     var response = JSON.parse(matchDataRequest.response)
     var matchId = response.value;

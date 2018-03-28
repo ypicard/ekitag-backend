@@ -143,7 +143,7 @@ INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('vis', 'cousinVi
 INSERT INTO users (trigram, pseudo) VALUES ('pim', 'Pro');
 INSERT INTO users (trigram, pseudo) VALUES ('mav', '\MuteAll');
 INSERT INTO users (trigram, pseudo) VALUES ('yob', 'Roxxor');
-INSERT INTO users (trigram, pseudo) VALUES ('gub', 'Souillon');
+INSERT INTO users (trigram, pseudo) VALUES ('gub', 'SuperSouyon');
 INSERT INTO users (trigram, pseudo) VALUES ('bar', 'Tente');
 INSERT INTO users (trigram, pseudo) VALUES ('iss', 'ekisomox');
 INSERT INTO users (trigram, pseudo) VALUES ('sal', 'Ticket Resto');
