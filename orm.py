@@ -52,7 +52,8 @@ get_matches = db.prepare(
     "LEFT JOIN seasons_matches "
     "ON matches.id = seasons_matches.match_id "
     "LEFT JOIN seasons AS season "
-    "ON season.id = seasons_matches.season_id")
+    "ON season.id = seasons_matches.season_id "
+    "ORDER BY id DESC")
 get_match_by_id = db.prepare(
     "SELECT matches.id as id, r_score, b_score, duration, datetime,  "
     "r1.id as r1$id, r1.pseudo as r1$pseudo, "
