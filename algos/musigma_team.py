@@ -25,11 +25,17 @@ musigma_team_season = TrueSkill(mu=float(config_ts.get('mu')),
 configs = {'global': musigma_team_global,
         'season': musigma_team_season }
 
+
 def set_trueskill_env(name):
     configs[name].make_as_global()
 
+
 def get_trueskill_env(name):
     return configs[name]
+
+
+def init_user(user_id, season_id):
+    orm.create_user_musigma_team(user_id, None, season_id, 0, float(config_tg.get('mu')), float(config_tg.get('sigma')))
 
 
 def update(match_id, season_id, r_ids, b_ids, r_score, b_score):
@@ -60,6 +66,11 @@ def update(match_id, season_id, r_ids, b_ids, r_score, b_score):
 
     with orm.transaction():
         for idx, user_id in enumerate(r_ids + b_ids):
+            # Init user to default stats if not already in base
+            user_musigma_team = orm.to_json(orm.get_user_musigma_team(user_id, season_id))
+            if len(user_musigma_team) == 0:
+                init_user(user_id, season_id)
+                
             orm.create_user_musigma_team(user_id, match_id, season_id, new_expositions[idx], new_rates[idx].mu, new_rates[idx].sigma)
 
 

@@ -19,6 +19,7 @@ def create(trigram, pseudo):
     trigram = trigram.lower() # Always lowercase trigram
     try:
         user_id = orm.create_user.first(trigram, pseudo)
+        
         # user_tg_id = orm.create_user_musigma_team.first(user_id, config_tg.get('mu'), config_tg.get('sigma'), None)
         # season = orm.to_json(orm.get_running_season.first())
         # if season:
@@ -49,7 +50,7 @@ def award(user_id, star_type):
     { 'gold': orm.award_gold_star,
     'silver': orm.award_silver_star,
     'copper': orm.award_copper_star,
-    'loser': orm.award_loser_star }[start_type]()
+    'loser': orm.award_loser_star }[star_type]()
 
     return {
         'message': 'Star awarded'
