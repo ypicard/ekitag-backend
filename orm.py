@@ -291,10 +291,6 @@ get_musigma_team = db.prepare('''
     SELECT * FROM musigma_team
     ORDER BY id
 ''')
-temp_copy = db.prepare('''
-    INSERT INTO musigma_team (user_id, season_id, match_id, exposition, mu, sigma)
-     VALUES ($1, $2, $3, $4, $5, $6)
-''')
 drop_musigma_team = db.prepare("DELETE FROM musigma_team")
 # ------------------------- µσ-ranking history
 # create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
