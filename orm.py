@@ -287,11 +287,11 @@ get_user_musigma_team_history = db.prepare('''
     ORDER BY id, season_id, match_id DESC;
 ''')
 
-get_musigma_team = db.prepare('''
-    SELECT * FROM musigma_team
-    ORDER BY id
-''')
-drop_musigma_team = db.prepare("DELETE FROM musigma_team")
+# get_musigma_team = db.prepare('''
+#     SELECT * FROM musigma_team
+#     ORDER BY id
+# ''')
+# drop_musigma_team = db.prepare("DELETE FROM musigma_team")
 # ------------------------- µσ-ranking history
 # create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 
