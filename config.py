@@ -22,7 +22,7 @@ else:
 
 
 def secret():
-    return self.__config['DEFAULT']
+    return self.__config['DEVELOPMENT']
 
 
 def musigma_team_global():
