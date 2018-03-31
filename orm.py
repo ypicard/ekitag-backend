@@ -126,7 +126,9 @@ get_user_matches = db.prepare('''
 
         CASE
             -- OUPUT OF MATCH FOR USER ID
-            WHEN (r_score > b_score AND (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1)) THEN 'win'
+            WHEN (r_score > b_score AND (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1)
+                OR 
+                (r_score < b_score AND (b1_id = $1 OR b2_id = $1 OR b3_id = $1 OR b4_id = $1 OR b5_id = $1 OR b6_id = $1))) THEN 'win'
             WHEN r_score = b_score THEN 'tie'
             ELSE 'lose'
         END AS output
@@ -260,6 +262,74 @@ update_season_match_count = db.prepare("UPDATE seasons SET played_matches = play
 create_season = db.prepare("INSERT INTO seasons (name, max_time, max_matches, start_time) VALUES ($1, $2, $3, $4) RETURNING id")
 terminate_season = db.prepare("UPDATE seasons SET running = false, end_time = $2 WHERE id = $1")
 
+# ------------------------- CUSTOM STATS
+get_user_match_stats = db.prepare('''
+    SELECT 
+        -- NB MATCHES PLAYED / WON / LOST
+        COUNT(*) AS matches_played,
+        COUNT(
+            CASE WHEN (r_score > b_score AND (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1))
+                    OR 
+                    (r_score < b_score AND (b1_id = $1 OR b2_id = $1 OR b3_id = $1 OR b4_id = $1 OR b5_id = $1 OR b6_id = $1)) THEN 1
+            END
+        ) AS wins,
+        COUNT(
+            CASE WHEN r_score = b_score THEN 1 END
+        ) as ties,
+        COUNT(
+            CASE WHEN (r_score < b_score AND (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1))
+                    OR 
+                    (r_score > b_score AND (b1_id = $1 OR b2_id = $1 OR b3_id = $1 OR b4_id = $1 OR b5_id = $1 OR b6_id = $1)) THEN 1
+            END
+        ) AS loses,
+
+        -- AVERAGE MATCH DURATION
+        AVG(duration) AS avg_duration,
+
+        -- AVERAGE SCORE OF USER'S TEAM
+        AVG(
+            CASE WHEN (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1) THEN r_score
+                WHEN (b1_id = $1 OR b2_id = $1 OR b3_id = $1 OR b4_id = $1 OR b5_id = $1 OR b6_id = $1) THEN b_score
+            end
+        ) AS avg_team_score
+
+    FROM matches
+
+    WHERE 
+    b1_id = $1 OR 
+    b2_id = $1 OR 
+    b3_id = $1 OR 
+    b4_id = $1 OR 
+    b5_id = $1 OR 
+    b6_id = $1 OR 
+    r1_id = $1 OR 
+    r2_id = $1 OR 
+    r3_id = $1 OR 
+    r4_id = $1 OR 
+    r5_id = $1 OR 
+    r6_id = $1
+''')
+get_user_custom_stats = db.prepare('''
+    SELECT 
+
+        AVG(score) AS avg_score,
+        AVG(tags) AS avg_tags,
+        AVG(popped) AS avg_popped,
+        AVG(grabs) AS avg_grabs,
+        AVG(drops) AS avg_drops,
+        AVG(hold) AS avg_hold,
+        AVG(captures) AS avg_captures,
+        AVG(prevent) AS avg_prevent,
+        AVG(returns) AS avg_returns,
+        AVG(support) AS avg_support,
+        AVG(pups) AS avg_pups
+
+    FROM statistics
+
+    WHERE user_id = $1
+''')
+
+
 # ------------------------- µσ-ranking
 # create_user_team_musigma = db.prepare("INSERT INTO musigma_team (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
 # create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
@@ -302,14 +372,6 @@ get_user_musigma_team_history = db.prepare('''
     WHERE user_id = $1
     ORDER BY id, season_id, match_id DESC;
 ''')
-
-# get_musigma_team = db.prepare('''
-#     SELECT * FROM musigma_team
-#     ORDER BY id
-# ''')
-# drop_musigma_team = db.prepare("DELETE FROM musigma_team")
-# ------------------------- µσ-ranking history
-# create_musigma_team_history = db.prepare("INSERT INTO musigma_team_history (user_id, match_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4, $5)")
 
 # ========================= UTILS
 # ROW CONVERTER MONKEY PATCHING

@@ -13,7 +13,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats
 
 # ========================= INIT
 
@@ -92,6 +92,20 @@ class UserMatches(Resource):
     @api.marshal_with(api.models['UserMatch'], as_list=True)
     def get(self, user_id):
         return users_matches.index(user_id)
+
+
+@v1.route("/users/<int:user_id>/user_stats")
+class UserStats(Resource):
+    @api.marshal_with(api.models['UserCustomStats'])
+    def get(self, user_id):
+        return users_stats.get_user_custom_stats(user_id)
+
+
+@v1.route("/users/<int:user_id>/match_stats")
+class UserMatchStats(Resource):
+    @api.marshal_with(api.models['UserCustomMatchStats'])
+    def get(self, user_id):
+        return users_stats.get_user_match_stats(user_id)
 
 
 # ------------------------- ADMIN

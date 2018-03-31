@@ -99,7 +99,27 @@ def createViews(api):
     api.clone('Stat', api.models['StatBase'], {
         'user': Nested(api.models['UserMin']),
     })
-
+    api.model('UserCustomStats', {
+        'avg_score': Float,
+        'avg_tags': Float,
+        'avg_popped': Float,
+        'avg_grabs': Float,
+        'avg_drops': Float,
+        'avg_hold': TimeDelta,
+        'avg_captures': Float,
+        'avg_prevent': TimeDelta,
+        'avg_returns': Float,
+        'avg_support': Float,
+        'avg_pups': Float
+    })
+    api.model('UserCustomMatchStats', {
+        'matches_played': Integer,
+        'wins': Integer,
+        'loses': Integer,
+        'ties': Integer,
+        'avg_duration': TimeDelta,
+        'avg_team_score': Float
+    })
 
     # ========================= MATCHES
     api.model('MatchBase', {
