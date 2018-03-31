@@ -120,24 +120,40 @@ get_match_by_id = db.prepare(
     "WHERE matches.id = $1 "
     "LIMIT 1; "
 )
-get_user_matches = db.prepare(
-    "SELECT *, "
-    "validator.id as validator$id, validator.pseudo as validator$pseudo, validator.usual_pseudos as validator$usual_pseudos "
-    "FROM matches "
-    "LEFT JOIN users AS validator ON validated_by = validator.id "
-    "WHERE "
-    "b1_id = $1 OR "
-    "b2_id = $1 OR "
-    "b3_id = $1 OR "
-    "b4_id = $1 OR "
-    "b5_id = $1 OR "
-    "b6_id = $1 OR "
-    "r1_id = $1 OR "
-    "r2_id = $1 OR "
-    "r3_id = $1 OR "
-    "r4_id = $1 OR "
-    "r5_id = $1 OR "
-    "r6_id = $1")
+get_user_matches = db.prepare('''
+        SELECT *,
+        season.id as season$id, season.name as season$name,
+
+        CASE
+            -- OUPUT OF MATCH FOR USER ID
+            WHEN (r_score > b_score AND (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1)) THEN 'win'
+            WHEN r_score = b_score THEN 'tie'
+            ELSE 'lose'
+        END AS output
+
+        FROM matches 
+
+        LEFT JOIN seasons_matches 
+        ON matches.id = seasons_matches.match_id 
+        LEFT JOIN seasons AS season 
+        ON season.id = seasons_matches.season_id 
+
+        WHERE 
+        b1_id = $1 OR 
+        b2_id = $1 OR 
+        b3_id = $1 OR 
+        b4_id = $1 OR 
+        b5_id = $1 OR 
+        b6_id = $1 OR 
+        r1_id = $1 OR 
+        r2_id = $1 OR 
+        r3_id = $1 OR 
+        r4_id = $1 OR 
+        r5_id = $1 OR 
+        r6_id = $1 
+
+        ORDER BY matches.id DESC;
+    ''')
 
 get_ranked_users_musigma_team = db.prepare('''
     SELECT *, RANK() OVER (ORDER BY t1.exposition DESC)

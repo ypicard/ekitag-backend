@@ -89,7 +89,7 @@ class User(Resource):
 
 @v1.route("/users/<int:user_id>/matches")
 class UserMatches(Resource):
-    @api.marshal_with(api.models['MatchMin'], as_list=True)
+    @api.marshal_with(api.models['UserMatch'], as_list=True)
     def get(self, user_id):
         return users_matches.index(user_id)
 

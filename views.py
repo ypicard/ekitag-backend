@@ -109,9 +109,6 @@ def createViews(api):
         'datetime': DateTime(dt_format="iso8601"),
         'duration': TimeDelta,
     })
-    api.clone('MatchValid', api.models['MatchBase'], {
-        'validator': Nested(api.models['UserMin'])
-    })
     api.clone('MatchPending', api.models['MatchBase'], {
         'b1': Nested(api.models['StatPending']),
         'b2': Nested(api.models['StatPending']),
@@ -126,6 +123,14 @@ def createViews(api):
         'r5': Nested(api.models['StatPending']),
         'r6': Nested(api.models['StatPending']),
     })
+    api.clone('MatchValid', api.models['MatchBase'], {
+        'validator': Nested(api.models['UserMin']),
+        'season': Nested(api.models['SeasonMin'])
+    })
+    api.clone('UserMatch', api.models['MatchBase'], {
+        'output': String,
+        'season': Nested(api.models['SeasonMin'])
+    })
     api.clone('MatchMin', api.models['MatchValid'], {
         'b1_id': Integer,
         'b2_id': Integer,
@@ -138,8 +143,7 @@ def createViews(api):
         'r3_id': Integer,
         'r4_id': Integer,
         'r5_id': Integer,
-        'r6_id': Integer,
-        'season': Nested(api.models['SeasonMin'])
+        'r6_id': Integer
     })
     api.clone('Match', api.models['MatchValid'], {
         'b1': Nested(api.models['UserMin']),
@@ -165,8 +169,7 @@ def createViews(api):
         'r3_stats': Nested(api.models['StatMin']),
         'r4_stats': Nested(api.models['StatMin']),
         'r5_stats': Nested(api.models['StatMin']),
-        'r6_stats': Nested(api.models['StatMin']),
-        'season': Nested(api.models['SeasonMin'])
+        'r6_stats': Nested(api.models['StatMin'])
     })
 
     # ========================= ALGO
