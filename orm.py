@@ -281,10 +281,10 @@ get_user_match_stats = db.prepare('''
                     OR 
                     (r_score > b_score AND (b1_id = $1 OR b2_id = $1 OR b3_id = $1 OR b4_id = $1 OR b5_id = $1 OR b6_id = $1)) THEN 1
             END
-        ) AS loses,
+        ) AS losses,
 
         -- AVERAGE MATCH DURATION
-        AVG(duration) AS avg_duration,
+        AVG(duration) AS avg_match_duration,
 
         -- AVERAGE SCORE OF USER'S TEAM
         AVG(

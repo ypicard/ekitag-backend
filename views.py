@@ -115,9 +115,9 @@ def createViews(api):
     api.model('UserCustomMatchStats', {
         'matches_played': Integer,
         'wins': Integer,
-        'loses': Integer,
+        'losses': Integer,
         'ties': Integer,
-        'avg_duration': TimeDelta,
+        'avg_match_duration': TimeDelta,
         'avg_team_score': Float
     })
 
