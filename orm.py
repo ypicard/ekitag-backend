@@ -309,24 +309,81 @@ get_user_match_stats = db.prepare('''
     r5_id = $1 OR 
     r6_id = $1
 ''')
+# MISSES HOLD AND PREVENT
 get_user_custom_stats = db.prepare('''
     SELECT 
 
         AVG(score) AS avg_score,
+        AVG(score) / (
+            SELECT MAX(avg_scores) FROM (
+                SELECT AVG(score) AS avg_scores FROM statistics GROUP BY user_id
+                )  AS avg_scores
+            ) AS score_rating,
+
         AVG(tags) AS avg_tags,
+        AVG(tags) / (
+            SELECT MAX(avg_tags) FROM (
+                SELECT AVG(tags) AS avg_tags FROM statistics GROUP BY user_id
+                )  AS avg_tags
+            ) AS tags_rating,
+
         AVG(popped) AS avg_popped,
+        AVG(popped) / (
+            SELECT MAX(avg_popped) FROM (
+                SELECT AVG(popped) AS avg_popped FROM statistics GROUP BY user_id
+                )  AS avg_popped
+            ) AS popped_rating,
+
+        
         AVG(grabs) AS avg_grabs,
+        AVG(grabs) / (
+            SELECT MAX(avg_grabs) FROM (
+                SELECT AVG(grabs) AS avg_grabs FROM statistics GROUP BY user_id
+                )  AS avg_grabs
+            ) AS grabs_rating,
+
+        
         AVG(drops) AS avg_drops,
-        AVG(hold) AS avg_hold,
+        AVG(drops) / (
+            SELECT MAX(avg_drops) FROM (
+                SELECT AVG(drops) AS avg_drops FROM statistics GROUP BY user_id
+                )  AS avg_drops
+            ) AS drops_rating,
+
         AVG(captures) AS avg_captures,
-        AVG(prevent) AS avg_prevent,
-        AVG(returns) AS avg_returns,
+        AVG(captures) / (
+            SELECT MAX(avg_captures) FROM (
+                SELECT AVG(captures) AS avg_captures FROM statistics GROUP BY user_id
+                )  AS avg_captures
+            ) AS captures_rating,
+        
+        AVG(pups) AS avg_pups,
+        AVG(pups) / (
+            SELECT MAX(avg_pups) FROM (
+                SELECT AVG(pups) AS avg_pups FROM statistics GROUP BY user_id
+                )  AS avg_pups
+            ) AS pups_rating,
+
         AVG(support) AS avg_support,
-        AVG(pups) AS avg_pups
+        AVG(support) / (
+            SELECT MAX(avg_support) FROM (
+                SELECT AVG(support) AS avg_support FROM statistics GROUP BY user_id
+                )  AS avg_support
+            ) AS support_rating,
+
+        AVG(returns) AS avg_returns,
+        AVG(returns) / (
+            SELECT MAX(avg_returns) FROM (
+                SELECT AVG(returns) AS avg_returns FROM statistics GROUP BY user_id
+                ) AS avg_returns
+            ) AS returns_rating,
+
+        AVG(hold) AS avg_hold,
+        AVG(prevent) AS avg_prevent
 
     FROM statistics
 
-    WHERE user_id = $1
+    WHERE user_id = $1;
 ''')
 
 

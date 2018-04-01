@@ -101,16 +101,27 @@ def createViews(api):
     })
     api.model('UserCustomStats', {
         'avg_score': Float,
+        'score_rating': Float,
         'avg_tags': Float,
+        'tags_rating': Float,
         'avg_popped': Float,
+        'popped_rating': Float,
         'avg_grabs': Float,
+        'grabs_rating': Float,
         'avg_drops': Float,
+        'drops_rating': Float,
         'avg_hold': TimeDelta,
+        'hold_rating': Float,
         'avg_captures': Float,
+        'captures_rating': Float,
         'avg_prevent': TimeDelta,
+        'prevent_rating': Float,
         'avg_returns': Float,
+        'returns_rating': Float,
         'avg_support': Float,
-        'avg_pups': Float
+        'support_rating': Float,
+        'avg_pups': Float,
+        'pups_rating': Float
     })
     api.model('UserCustomMatchStats', {
         'matches_played': Integer,
