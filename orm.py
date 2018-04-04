@@ -314,66 +314,66 @@ get_user_custom_stats = db.prepare('''
     SELECT 
 
         AVG(score) AS avg_score,
-        AVG(score) / (
-            SELECT MAX(avg_scores) FROM (
+        (AVG(score) - (SELECT AVG(score) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1)) / (
+            SELECT MAX(avg_scores) - MIN(avg_scores) FROM (
                 SELECT AVG(score) AS avg_scores FROM statistics GROUP BY user_id
                 )  AS avg_scores
             ) AS score_rating,
 
         AVG(tags) AS avg_tags,
-        AVG(tags) / (
-            SELECT MAX(avg_tags) FROM (
+        (AVG(tags) - (SELECT AVG(tags) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_tags) - MIN(avg_tags) FROM (
                 SELECT AVG(tags) AS avg_tags FROM statistics GROUP BY user_id
                 )  AS avg_tags
             ) AS tags_rating,
 
         AVG(popped) AS avg_popped,
-        AVG(popped) / (
-            SELECT MAX(avg_popped) FROM (
+        (AVG(popped) - (SELECT AVG(popped) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_popped) - MIN(avg_popped) FROM (
                 SELECT AVG(popped) AS avg_popped FROM statistics GROUP BY user_id
                 )  AS avg_popped
             ) AS popped_rating,
 
         
         AVG(grabs) AS avg_grabs,
-        AVG(grabs) / (
-            SELECT MAX(avg_grabs) FROM (
+        (AVG(grabs) - (SELECT AVG(grabs) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_grabs) - MIN(avg_grabs) FROM (
                 SELECT AVG(grabs) AS avg_grabs FROM statistics GROUP BY user_id
                 )  AS avg_grabs
             ) AS grabs_rating,
 
         
         AVG(drops) AS avg_drops,
-        AVG(drops) / (
-            SELECT MAX(avg_drops) FROM (
+        (AVG(drops) - (SELECT AVG(drops) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_drops) - MIN(avg_drops) FROM (
                 SELECT AVG(drops) AS avg_drops FROM statistics GROUP BY user_id
                 )  AS avg_drops
             ) AS drops_rating,
 
         AVG(captures) AS avg_captures,
-        AVG(captures) / (
-            SELECT MAX(avg_captures) FROM (
+        (AVG(captures) - (SELECT AVG(captures) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_captures) - MIN(avg_captures) FROM (
                 SELECT AVG(captures) AS avg_captures FROM statistics GROUP BY user_id
                 )  AS avg_captures
             ) AS captures_rating,
         
         AVG(pups) AS avg_pups,
-        AVG(pups) / (
-            SELECT MAX(avg_pups) FROM (
+        (AVG(pups) - (SELECT AVG(pups) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_pups) - MIN(avg_pups) FROM (
                 SELECT AVG(pups) AS avg_pups FROM statistics GROUP BY user_id
                 )  AS avg_pups
             ) AS pups_rating,
 
         AVG(support) AS avg_support,
-        AVG(support) / (
-            SELECT MAX(avg_support) FROM (
+        (AVG(support) - (SELECT AVG(support) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_support) - MIN(avg_support) FROM (
                 SELECT AVG(support) AS avg_support FROM statistics GROUP BY user_id
                 )  AS avg_support
             ) AS support_rating,
 
         AVG(returns) AS avg_returns,
-        AVG(returns) / (
-            SELECT MAX(avg_returns) FROM (
+        (AVG(returns) - (SELECT AVG(returns) AS avg FROM statistics GROUP BY user_id ORDER BY avg ASC LIMIT 1))/ (
+            SELECT MAX(avg_returns) - MIN(avg_returns) FROM (
                 SELECT AVG(returns) AS avg_returns FROM statistics GROUP BY user_id
                 ) AS avg_returns
             ) AS returns_rating,
