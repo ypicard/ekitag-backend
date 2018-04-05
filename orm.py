@@ -121,8 +121,9 @@ get_match_by_id = db.prepare(
     "LIMIT 1; "
 )
 get_user_matches = db.prepare('''
-        SELECT *,
-        season.id as season$id, season.name as season$name,
+        SELECT
+             matches.id, r_score, b_score, duration, validated_by, datetime,
+            season.id as season$id, season.name as season$name,
 
         CASE
             -- OUPUT OF MATCH FOR USER ID
