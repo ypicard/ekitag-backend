@@ -90,15 +90,15 @@ def show(ids, season_id):
     matches = [[{p: rates[p] for p in t} for t in m ] for m in matches]
 
     qualities = [env.quality(m) for m in matches]
-    qual, idx = min((_, idx) for (idx, _) in enumerate(qualities))
+    qual, idx = max((_, idx) for (idx, _) in enumerate(qualities))
     logger.debug('qualities: {}'.format(qualities))
-    logger.debug('min quality: {}, {}'.format(qual, idx))
+    logger.debug('max quality: {}, {}'.format(qual, idx))
 
     match = matches[idx]
-    logger.debug('match: {}'.format(match))
     match = { 'r_ids': [user_id for user_id in match[0]],
             'b_ids': [user_id for user_id in match[1]],
             'quality': qual }
+    logger.debug('match: {}'.format(match))
     return match
 
 
@@ -110,6 +110,6 @@ def get_all_possible_matches(ids):
         for t2 in all_teams:
             if not any(p in t1 for p in t2) and not any(t2 in m for m in matches):
                 matches.append((t1, t2))
-                
+
     logger.debug('possible matches: {}'.format(matches))
     return matches
