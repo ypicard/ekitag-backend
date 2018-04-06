@@ -159,21 +159,16 @@ get_user_matches = db.prepare('''
     ''')
 
 get_ranked_users_musigma_team = db.prepare('''
-    SELECT *, RANK() OVER (ORDER BY t1.exposition DESC)
-    FROM musigma_team AS t1
-    INNER JOIN(
-        SELECT  MAX(exposition) AS max_exposition,
-        user_id
+    SELECT *, RANK() OVER (ORDER BY res.exposition DESC)
+    FROM (
+        SELECT DISTINCT ON (user_id) *
         FROM musigma_team
         WHERE (season_id = $1 OR ($1 IS NULL AND season_id IS NULL))
-        GROUP BY user_id
-    ) AS t2
-    ON t2.user_id = t1.user_id
-    AND t2.max_exposition = t1.exposition
-    LEFT JOIN users ON users.id = t1.user_id
-    ORDER BY t1.exposition DESC;
-'''
-)
+        ORDER BY user_id, id DESC
+    ) AS res
+    LEFT JOIN users ON users.id = res.user_id;
+''')
+
 create_stats = db.prepare(
     "INSERT INTO statistics (match_id, user_id, score, tags, popped, grabs, drops, hold, captures, prevent, returns, support, pups) "
     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) "
@@ -415,41 +410,23 @@ SELECT * FROM (
 
 
 # ------------------------- µσ-ranking
-# create_user_team_musigma = db.prepare("INSERT INTO musigma_team (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
-# create_user_team_global_musigma = lambda user_id, mu, sigma: create_user_team_musigma(user_id, None, mu, sigma)
-# get_user_team_musigma = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id = $2")
-# get_user_team_global_musigma = lambda user_id, mu, sigma: get_user_team_musigma(user_id, None)
 get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND (season_id = $2 OR ($2 IS NULL AND season_id IS NULL)) ORDER BY id DESC LIMIT 1")
-# get_user_musigma_team_global = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND season_id IS NULL ORDER BY id DESC LIMIT 1")
 create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_id, season_id, exposition, mu, sigma) VALUES ($1, $2, $3, $4, $5, $6)")
-# update_user_musigma_team = db.prepare("UPDATE musigma_team SET mu = $2, sigma = $3 WHERE user_id = $1 AND season_id = $2")
-# create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) RETURNING id")
-# upsert_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, mu, sigma, season_id) VALUES ($1, $2, $3, $4) "
-    # "ON CONFLICT (user_id, season_id) DO UPDATE SET mu = $2, sigma = $3 "
-    # "RETURNING *")
-# delete_user_musigma_team_global = db.prepare("DELETE FROM MUSIGMA_TEAM WHERE user_id = $1 AND season_id IS NULL")
-# create_user_solo_musigma = db.prepare("INSERT INTO musigma_solo (user_id, season_id, mu, sigma) VALUES ($1, $2, $3, $4) RETURNING id")
-# create_user_solo_global_musigma = lambda user_id, mu, sigma: create_user_solo_musigma(user_id, None, mu, sigma)
-# get_user_solo_musigma = db.prepare("SELECT * FROM musigma_solo WHERE user_id = $1 AND season_id = $2")
-# get_user_solo_global_musigma = lambda user_id, mu, sigma: get_user_solo_musigma(user_id, None)
-# update_user_solo_musigma = db.prepare("UPDATE musigma_solo SET mu = $3, sigma = $4 WHERE user_id = $1 AND season_id = $2")
-# update_user_solo_global_musigma = lambda user_id, mu, sigma: update_user_solo_musigma(user_id, None, mu, sigma)
 get_all_user_musigma_rankings = db.prepare('''
-    SELECT res.*, seasons.name AS season_name FROM (
-        SELECT  t1.*, RANK() OVER (PARTITION BY season_id ORDER BY t1.exposition DESC)
-        FROM musigma_team AS t1
-        INNER JOIN (
-            SELECT MAX(exposition) AS max_exposition, user_id
+    SELECT * FROM (
+        SELECT user_id, exposition, mu, sigma, seasons.id AS season_id, seasons.name AS season_name, 
+            RANK() OVER (PARTITION BY season_id ORDER BY res.exposition DESC)
+        FROM(
+            SELECT DISTINCT ON(user_id, season_id) *
             FROM musigma_team
-            GROUP BY user_id, season_id
-        ) AS t2
-        ON  t2.user_id = t1.user_id
-        AND t2.max_exposition = t1.exposition
-    ) AS res
-    LEFT JOIN seasons on seasons.id = res.season_id
-    WHERE user_id = $1
-    ORDER BY season_id DESC
-    ''')
+            ORDER BY user_id, season_id, id DESC
+        ) AS res
+        LEFT JOIN seasons on seasons.id = res.season_id
+        LEFT JOIN users ON users.id = res.user_id
+        ORDER BY season_id DESC
+        ) AS res
+    WHERE user_id = $1;
+''')
 get_user_musigma_team_history = db.prepare('''
     SELECT musigma_team.*, m.datetime FROM musigma_team
     LEFT JOIN matches AS m ON m.id = musigma_team.match_id

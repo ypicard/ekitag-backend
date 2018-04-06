@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 def show(algo, user_id):
     show_func = {'musigma_team': orm.get_all_user_musigma_rankings}[algo]
-    return { 'rankings': orm.to_json(show_func(user_id)) }
+    return orm.to_json(show_func(user_id))
 
 
 def run(algo, ids):

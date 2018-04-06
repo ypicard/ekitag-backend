@@ -58,9 +58,9 @@ def createViews(api):
         'season_id': Integer,
         'season_name': String
     })
-    api.model('AlgoUserAll',  {
-        'rankings': List(Nested(api.models['AlgoUserMinSeason']))
-    })
+    # api.model('AlgoUserAll',  {
+    #     'rankings': List(Nested(api.models['AlgoUserMinSeason']))
+    # })
     api.model('VizHistoryEl', {
         'mu': Float,
         'sigma': Float,
