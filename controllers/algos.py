@@ -4,17 +4,23 @@ import orm
 from flask_restplus import abort
 from algos import musigma_team
 import postgresql.exceptions
+import logging
+
+logger = logging.getLogger()
 
 
 def show(algo, user_id):
     show_func = {'musigma_team': orm.get_all_user_musigma_rankings}[algo]
     return { 'rankings': orm.to_json(show_func(user_id)) }
 
+
 def run(algo, ids):
+    logger.debug("ids: {}".format(ids))
     if (len(ids) < 2):
         abort(400, 'Not enough players')
     cur_season = orm.to_json(orm.get_running_season.first())
     cur_season_id = cur_season['id'] if cur_season else None
+    logger.debug("current season id: {}".format(cur_season_id))
     return {'musigma_team': musigma_team.show}[algo](ids, cur_season_id)
 
 

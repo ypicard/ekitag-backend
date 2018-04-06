@@ -7,6 +7,7 @@ from flask_sslify import SSLify
 from flask_cors import CORS
 
 import datetime
+import logging
 
 from views import createViews
 from utils import admin_required
@@ -16,6 +17,7 @@ import orm
 from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats
 
 # ========================= INIT
+logging.basicConfig(level=logging.DEBUG)
 
 secret = config.secret()
 _app = Flask(__name__)

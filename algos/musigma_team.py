@@ -5,6 +5,9 @@ from config import musigma_team_global, musigma_team_season
 import itertools
 import orm
 from flask_restplus import abort
+import logging
+
+logger = logging.getLogger()
 
 config_tg = musigma_team_global()
 musigma_team_global = TrueSkill(mu=float(config_tg.get('mu')),
@@ -75,7 +78,7 @@ def update(match_id, season_id, r_ids, b_ids, r_score, b_score):
 
 
 def show(ids, season_id):
-    
+    logging.debug('musigma_team.show({}, {})'.format(ids, season_id))
     env_name = 'global' if not season_id else 'season'
     set_trueskill_env(env_name)
     env = get_trueskill_env(env_name)
@@ -88,8 +91,11 @@ def show(ids, season_id):
 
     qualities = [env.quality(m) for m in matches]
     qual, idx = min((_, idx) for (idx, _) in enumerate(qualities))
-    
+    logger.debug('qualities: {}'.format(qualities))
+    logger.debug('min quality: {}, {}'.format(qual, idx))
+
     match = matches[idx]
+    logger.debug('match: {}'.format(match))
     match = { 'r_ids': [user_id for user_id in match[0]],
             'b_ids': [user_id for user_id in match[1]],
             'quality': qual }
@@ -104,4 +110,6 @@ def get_all_possible_matches(ids):
         for t2 in all_teams:
             if not any(p in t1 for p in t2) and not any(t2 in m for m in matches):
                 matches.append((t1, t2))
+                
+    logger.debug('possible matches: {}'.format(matches))
     return matches
