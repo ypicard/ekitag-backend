@@ -281,7 +281,8 @@ get_user_match_stats = db.prepare('''
 
         -- AVERAGE MATCH DURATION
         AVG(duration) AS match_duration_avg,
-
+        SUM(duration) AS time_played,
+        
         -- AVERAGE SCORE OF USER'S TEAM
         AVG(
             CASE WHEN (r1_id = $1 OR r2_id = $1 OR r3_id = $1 OR r4_id = $1 OR r5_id = $1 OR r6_id = $1) THEN r_score

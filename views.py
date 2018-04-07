@@ -146,7 +146,8 @@ def createViews(api):
         'losses': Integer,
         'ties': Integer,
         'match_duration_avg': TimeDelta,
-        'team_score_avg': Float
+        'team_score_avg': Float,
+        'time_played': TimeDelta
     })
 
     # ========================= MATCHES
