@@ -324,7 +324,12 @@ SELECT * FROM (
         RANK() OVER (ORDER BY stats.support_avg DESC) AS support_rank,
         RANK() OVER (ORDER BY stats.returns_avg DESC) AS returns_rank,
         RANK() OVER (ORDER BY stats.hold_avg DESC) AS hold_rank,
-        RANK() OVER (ORDER BY stats.prevent_avg DESC) AS prevent_rank
+        RANK() OVER (ORDER BY stats.prevent_avg DESC) AS prevent_rank,
+        RANK() OVER (ORDER BY stats.grabs_eff DESC) AS grabs_eff_rank,
+        -- INVERTED
+        RANK() OVER (ORDER BY stats.hold_eff ASC) AS hold_eff_rank,
+        -- INVERTED
+        RANK() OVER (ORDER BY stats.captures_time ASC) AS captures_time_rank
 
         FROM (
             -- STATS COMPUTATIONS
@@ -396,6 +401,11 @@ SELECT * FROM (
                         SELECT AVG(returns) AS returns_avg FROM statistics GROUP BY user_id
                         ) AS returns_avg
                     ) AS returns_rating,
+
+                -- EFFECTIVENESS
+                SUM(CAST(captures AS decimal)) / SUM(grabs) AS grabs_eff,
+                SUM(hold) / SUM(grabs) AS hold_eff,
+                SUM(hold) / SUM(captures) AS captures_time,
 
                 AVG(hold) AS hold_avg,
                 AVG(prevent) AS prevent_avg

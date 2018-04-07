@@ -133,6 +133,12 @@ def createViews(api):
         'pups_avg': Float,
         'pups_rating': Float,
         'pups_rank': Integer,
+        'grabs_eff': Float,
+        'hold_eff': TimeDelta,
+        'captures_time': TimeDelta,
+        'grabs_eff_rank': Integer,
+        'hold_eff_rank': Integer,
+        'captures_time_rank': Integer
     })
     api.model('UserCustomMatchStats', {
         'matches_played': Integer,
