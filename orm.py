@@ -406,7 +406,7 @@ SELECT * FROM (
                 -- EFFECTIVENESS
                 SUM(CAST(captures AS decimal)) / SUM(grabs) AS grabs_eff,
                 SUM(hold) / SUM(grabs) AS hold_eff,
-                SUM(hold) / SUM(captures) AS captures_time,
+                SUM(hold) / NULLIF(SUM(captures),0) AS captures_time,
 
                 AVG(hold) AS hold_avg,
                 AVG(prevent) AS prevent_avg
