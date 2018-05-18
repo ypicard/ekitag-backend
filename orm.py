@@ -419,6 +419,18 @@ SELECT * FROM (
     WHERE user_id = $1
 ''')
 
+def get_ranking(stat, method, season_id):
+    season_id = season_id if season_id else 'NULL'
+
+    return db.prepare('''
+    SELECT user_id, pseudo, value, RANK() OVER (ORDER BY res.value DESC) FROM (
+        SELECT user_id, {}({}) AS value FROM statistics
+        LEFT JOIN seasons_matches on seasons_matches.match_id = statistics.match_id
+        WHERE (season_id = {} OR ({} IS NULL AND season_id IS NULL))
+        GROUP BY user_id
+    ) AS res
+    LEFT JOIN users ON users.id = res.user_id;
+    '''.format(method, stat, season_id, season_id))()
 
 # ------------------------- µσ-ranking
 get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND (season_id = $2 OR ($2 IS NULL AND season_id IS NULL)) ORDER BY id DESC LIMIT 1")

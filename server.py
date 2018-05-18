@@ -14,7 +14,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics
 
 # ========================= INIT
 logging.basicConfig(level=logging.DEBUG)
@@ -285,3 +285,11 @@ class AlgoUserViz(Resource):
         return algos.viz(algo, user_id, viz)
 
 
+# ------------------------- STAT RANKINGS
+@v1.route("/statistics/ranking")
+class StatisticsRanking(Resource):
+    @api.marshal_with(api.models['StatRankings'])
+    @api.expect(parser_statistics_get)
+    def post(self):
+        args = parser_statistics_get.parse_args()
+        return statistics.rank(args['stat'], args['method'], season_id=args['season_id'] if args['season_id'] else 'NULL')

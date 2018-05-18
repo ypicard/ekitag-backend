@@ -149,6 +149,17 @@ def createViews(api):
         'team_score_avg': Float,
         'time_played': TimeDelta
     })
+    api.model('Rank', {
+            'pseudo': String,
+            'user_id': Integer,
+            'rank': Integer,
+            'value': String
+    })
+    api.model('StatRankings', {
+        'stat': String,
+        'method': String,
+        'ranking': List(Nested(api.models['Rank']))
+    })
 
     # ========================= MATCHES
     api.model('MatchBase', {

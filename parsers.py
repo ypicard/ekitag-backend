@@ -61,3 +61,8 @@ parser_algo_get.add_argument('ids', type=int, required=True, action='append', lo
 
 parser_algo_users_get = reqparse.RequestParser()
 parser_algo_users_get.add_argument('season_id', type=int, location='args')
+
+parser_statistics_get = reqparse.RequestParser()
+parser_statistics_get.add_argument('stat', type=str, location='form', required=True)
+parser_statistics_get.add_argument('method', type=str, location='form', required=True)
+parser_statistics_get.add_argument('season_id', type=int, location='form')
