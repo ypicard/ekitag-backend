@@ -17,8 +17,11 @@ def createViews(api):
         'id': Integer,
         'pseudo': String,
         'usual_pseudos': List(String, default=[]),
-        'is_active': Boolean
-        # 'trigram': String,
+        'is_active': Boolean,
+        'gold_stars': Integer,
+        'silver_stars': Integer,
+        'bronze_stars': Integer,
+        'loser_stars': Integer
     })
     api.clone('User', api.models['UserMin'], {
         'gold_stars': Integer,

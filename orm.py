@@ -16,7 +16,7 @@ transaction = db.xact
 
 # ------------------------- USERS
 create_user = db.prepare("INSERT INTO users (trigram, pseudo) VALUES ($1, $2) RETURNING id")
-get_users = db.prepare("SELECT id, pseudo, usual_pseudos, is_active FROM users")
+get_users = db.prepare("SELECT id, pseudo, usual_pseudos, is_active, gold_stars, silver_stars, bronze_stars, loser_stars FROM users")
 update_user = db.prepare("UPDATE users SET pseudo = $2, usual_pseudos = $3 WHERE id = $1")
 get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
