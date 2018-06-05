@@ -34,6 +34,7 @@ def show(season_id):
 
 def delete(season_id):
     with orm.transaction():
+        orm.apply_musigma_team_penalties(season_id)
         orm.terminate_season(season_id, datetime.datetime.now())
         # Award stars
         ranked_users = orm.to_json(orm.get_ranked_users_musigma_team(season_id))

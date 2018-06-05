@@ -17,5 +17,3 @@ def rank(stat, method, season_id):
         'method': method,
         'ranking': res
     }
-
-

@@ -421,7 +421,7 @@ SELECT * FROM (
 
 def get_ranking(stat, method, season_id):
     season_id = season_id if season_id else 'NULL'
-
+    # TODO:  Maybe something wrong here, to get all time clax --> Sure about it
     return db.prepare('''
     SELECT user_id, pseudo, value, RANK() OVER (ORDER BY res.value DESC) FROM (
         SELECT user_id, {}({}) AS value FROM statistics
@@ -435,6 +435,23 @@ def get_ranking(stat, method, season_id):
 # ------------------------- µσ-ranking
 get_user_musigma_team = db.prepare("SELECT * FROM musigma_team WHERE user_id = $1 AND (season_id = $2 OR ($2 IS NULL AND season_id IS NULL)) ORDER BY id DESC LIMIT 1")
 create_user_musigma_team = db.prepare("INSERT INTO musigma_team (user_id, match_id, season_id, exposition, mu, sigma) VALUES ($1, $2, $3, $4, $5, $6)")
+apply_musigma_team_penalties = db.prepare('''
+    INSERT INTO musigma_team(user_id, season_id, match_id, exposition, mu, sigma)
+    SELECT curs.user_id, curs.season_id, NULL AS match_id, coalesce(curs.exposition - pens.user_pen, curs.exposition) AS exposition, curs.mu, curs.sigma FROM 
+        (
+            SELECT DISTINCT ON (user_id) * FROM musigma_team
+            WHERE season_id = $1
+            ORDER BY user_id, id DESC
+        ) AS curs
+        LEFT JOIN 
+        (
+            SELECT user_id, SUM(value) AS user_pen FROM penalties
+            WHERE season_id = $1
+            GROUP BY user_id
+        ) AS pens
+        ON curs.user_id = pens.user_id
+    ;
+''')
 get_all_user_musigma_rankings = db.prepare('''
     SELECT * FROM (
         SELECT user_id, exposition, mu, sigma, seasons.id AS season_id, seasons.name AS season_name, 
@@ -456,6 +473,28 @@ get_user_musigma_team_history = db.prepare('''
     WHERE user_id = $1
     ORDER BY id, season_id, match_id DESC;
 ''')
+
+# ------------------------- PENALTIES
+
+# Should a penalty directly alter a player's score, or be taken into account only at the end of a season ?
+create_penalty = db.prepare('''
+    INSERT INTO penalties
+    (user_id, season_id, description, value)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id;
+''')
+
+get_penalties = db.prepare('''
+    SELECT * FROM penalties
+    LEFT JOIN seasons ON seasons.id = penalties.season_id;
+''')
+
+get_season_penalties = db.prepare('''
+    SELECT * FROM penalties
+    LEFT JOIN seasons ON seasons.id = penalties.season_id
+    WHERE seasons.id = $1;
+''')
+
 
 # ========================= UTILS
 # ROW CONVERTER MONKEY PATCHING

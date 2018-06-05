@@ -14,7 +14,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics, penalties
 
 # ========================= INIT
 logging.basicConfig(level=logging.DEBUG)
@@ -191,6 +191,7 @@ class MatchPending(Resource):
     def delete(self, match_id):
         return matchespending.delete(match_id)
 
+
 @v1.route("/matches/pending/<int:match_id>/stats")
 class MatchPendingStats(Resource):
     # @api.marshal_with(api.models['StatMin'], as_list=True)
@@ -225,6 +226,7 @@ class Seasons(Resource):
             args['max_time'] = datetime.timedelta(seconds=args['max_time'])
         return seasons.create(**args)
 
+
 @v1.route("/seasons/<int:season_id>")
 class Season(Resource):
     @api.marshal_with(api.models['Season'])
@@ -252,6 +254,7 @@ class SeasonMatches(Resource):
         return seasons_matches.index(season_id)
 
 # ------------------------- ALGO
+
 
 @v1.route("/algo/<string:algo>")
 class Algo(Resource):
@@ -293,3 +296,21 @@ class StatisticsRanking(Resource):
     def post(self):
         args = parser_statistics_get.parse_args()
         return statistics.rank(args['stat'], args['method'], season_id=args['season_id'] if args['season_id'] else 'NULL')
+
+# ------------------------- PENALTIES
+
+
+@v1.route("/penalties")
+class Penalties(Resource):
+    @api.marshal_with(api.models['Penalty'])
+    @api.expect(parser_penalties_create)
+    def post(self):
+        args = parser_penalties_create.parse_args()
+        return penalties.create(args['user_id'], args['season_id'], args['description'], args['value'])
+
+    @api.marshal_with(api.models['Penalty'], as_list=True)
+    @api.expect(parser_penalties_index)
+    def get(self):
+        args = parser_penalties_index.parse_args()
+        season_id = args['season_id'] if 'season_id' in args else None
+        return penalties.index(season_id)

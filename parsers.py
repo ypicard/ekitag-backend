@@ -66,3 +66,12 @@ parser_statistics_get = reqparse.RequestParser()
 parser_statistics_get.add_argument('stat', type=str, location='form', required=True)
 parser_statistics_get.add_argument('method', type=str, location='form', required=True)
 parser_statistics_get.add_argument('season_id', type=int, location='form')
+
+parser_penalties_create = reqparse.RequestParser()
+parser_penalties_create.add_argument('user_id', type=int, location='form', required=True)
+parser_penalties_create.add_argument('season_id', type=int, location='form', required=True)
+parser_penalties_create.add_argument('description', type=str, location='form', required=True)
+parser_penalties_create.add_argument('value', type=float, location='form', required=True)
+
+parser_penalties_index = reqparse.RequestParser()
+parser_penalties_index.add_argument('season_id', type=int, location='args')
