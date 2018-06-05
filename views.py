@@ -31,7 +31,7 @@ def createViews(api):
         'is_active': Boolean,
         'is_admin': Boolean,
     })
- 
+
     # ========================= SEASONS
     api.model('SeasonMin', {
         'id': Integer,
@@ -47,16 +47,16 @@ def createViews(api):
     })
     # ========================= ALGO
     api.model('AlgoUserMin', {
-           'mu': Float,
-           'sigma': Float,
-           'exposition': Float,
-           'rank': Integer
-       })
+        'mu': Float,
+        'sigma': Float,
+        'exposition': Float,
+        'rank': Integer
+    })
     api.clone('AlgoUser', api.models['UserMin'], api.models['AlgoUserMin'])
     api.model('AlgoUsers', {
         'algo': String,
         'users': List(Nested(api.models['AlgoUser'])),
-        })
+    })
     api.clone('AlgoUserMinSeason', api.models['AlgoUserMin'], {
         'season_id': Integer,
         'season_name': String
@@ -153,10 +153,10 @@ def createViews(api):
         'time_played': TimeDelta
     })
     api.model('Rank', {
-            'pseudo': String,
-            'user_id': Integer,
-            'rank': Integer,
-            'value': String
+        'pseudo': String,
+        'user_id': Integer,
+        'rank': Integer,
+        'value': String
     })
     api.model('StatRankings', {
         'stat': String,
@@ -240,4 +240,13 @@ def createViews(api):
         'r_ids': List(Integer),
         'b_ids': List(Integer),
         'quality': Float
+    })
+
+    # ========================= ALGOPENALTY
+    api.model('Penalty', {
+        'id': Integer,
+        'user_id': Integer,
+        'season_id': Integer,
+        'value': Float,
+        'description': String
     })

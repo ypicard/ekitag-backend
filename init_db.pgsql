@@ -130,9 +130,19 @@ CREATE TABLE musigma_team (
     UNIQUE (user_id, season_id, match_id)
 );
 
+
 -- TO ALLOW ONLY ONE (USER_ID, NULL_SEASON_ID) ROW: PARTIAL INDEX
 CREATE UNIQUE INDEX musigma_team_global_uni_idx ON musigma_team (user_id, match_id)
 WHERE season_id IS NULL;
+
+-- PENALTIES
+CREATE TABLE penalties (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    season_id INTEGER REFERENCES seasons(id) ON DELETE CASCADE,
+    value DECIMAL NOT NULL,
+    description TEXT NOT NULL
+);
 
 -- POPULATE ADMINS
 INSERT INTO users (trigram, pseudo, is_admin, password) VALUES ('yap', 'Yapus', true, crypt('107410', gen_salt('bf')));

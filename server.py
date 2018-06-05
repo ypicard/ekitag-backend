@@ -14,7 +14,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics, iot
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics, penalties, iot
 
 # ========================= INIT
 logging.basicConfig(level=logging.DEBUG)
@@ -314,3 +314,21 @@ class StatisticsRanking(Resource):
     def post(self):
         args = parser_statistics_get.parse_args()
         return statistics.rank(args['stat'], args['method'], season_id=args['season_id'] if args['season_id'] else 'NULL')
+
+# ------------------------- PENALTIES
+
+
+@v1.route("/penalties")
+class Penalties(Resource):
+    @api.marshal_with(api.models['Penalty'])
+    @api.expect(parser_penalties_create)
+    def post(self):
+        args = parser_penalties_create.parse_args()
+        return penalties.create(args['user_id'], args['season_id'], args['description'], args['value'])
+
+    @api.marshal_with(api.models['Penalty'], as_list=True)
+    @api.expect(parser_penalties_index)
+    def get(self):
+        args = parser_penalties_index.parse_args()
+        season_id = args['season_id'] if 'season_id' in args else None
+        return penalties.index(season_id)
