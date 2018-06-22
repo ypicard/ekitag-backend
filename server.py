@@ -14,7 +14,7 @@ from utils import admin_required
 from parsers import *
 import config
 import orm
-from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics
+from controllers import users, users_matches, admin, matches, matches_stats, matchespending, matchespending_stats, seasons, seasons_matches, algos, users_stats, statistics, iot
 
 # ========================= INIT
 logging.basicConfig(level=logging.DEBUG)
@@ -55,6 +55,12 @@ def app():
 # ========================= NAMESPACE V1
 v1 = api.namespace(name="v1", validate=True)
 
+
+# ------------------------- RED ALERT HOOK
+@v1.route("/iot")
+class RedAlert(Resource):
+    def post(self):
+        return iot.ping()
 
 # ------------------------- USERS
 @v1.route("/users")
