@@ -59,7 +59,7 @@ v1 = api.namespace(name="v1", validate=True)
 # ------------------------- RED ALERT HOOK
 @v1.route("/iot")
 class RedAlert(Resource):
-    def post(self):
+    def get(self):
         return iot.ping()
 
 # ------------------------- USERS

@@ -7,7 +7,10 @@ import config
 secret = config.secret()
 
 
-def ping():
-    r = requests.get(secret.get('iot_uri'))
+def ping(duration=None):
+    params = {}
+    if duration: 
+        params['duration'] = duration
+    r = requests.get(secret.get('iot_uri') + '/tagpro', params=params)
     return {'message': 'Bip - boop - bip',
             'iot': r.status_code}
