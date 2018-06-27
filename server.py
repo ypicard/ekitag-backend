@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restplus import Api, Resource, marshal
 from flask_restplus.inputs import datetime_from_iso8601
 from flask_jwt_extended import JWTManager, get_jwt_identity
@@ -60,9 +60,20 @@ v1 = api.namespace(name="v1", validate=True)
 @v1.route("/iot")
 class RedAlert(Resource):
     def get(self):
-        return iot.ping()
+        iot.ping()
+        return
+
+
+@v1.route("/teams")
+class Teams(Resource):
+    def post(self):
+        iot.ping()
+        obj = { 'type': 'message', 'text': 'Hop la.' }
+        return jsonify(obj)
 
 # ------------------------- USERS
+
+
 @v1.route("/users")
 class Users(Resource):
     @api.marshal_with(api.models['Message'])
@@ -197,6 +208,7 @@ class MatchPending(Resource):
     def delete(self, match_id):
         return matchespending.delete(match_id)
 
+
 @v1.route("/matches/pending/<int:match_id>/stats")
 class MatchPendingStats(Resource):
     # @api.marshal_with(api.models['StatMin'], as_list=True)
@@ -231,6 +243,7 @@ class Seasons(Resource):
             args['max_time'] = datetime.timedelta(seconds=args['max_time'])
         return seasons.create(**args)
 
+
 @v1.route("/seasons/<int:season_id>")
 class Season(Resource):
     @api.marshal_with(api.models['Season'])
@@ -259,12 +272,14 @@ class SeasonMatches(Resource):
 
 # ------------------------- ALGO
 
+
 @v1.route("/algo/<string:algo>")
 class Algo(Resource):
     @api.marshal_with(api.models['Algo'], as_list=True)
     @api.expect(parser_algo_get)
     def get(self, algo):
         args = parser_algo_get.parse_args()
+        iot.ping()
         return algos.run(algo, args['ids'])
 
 
