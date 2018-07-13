@@ -242,6 +242,12 @@ def createViews(api):
         'quality': Float
     })
 
+    api.model('AlgoPseudos', {
+        'r_pseudos': List(String),
+        'b_pseudos': List(String),
+        'quality': Float
+    })
+
     # ========================= ALGOPENALTY
     api.model('Penalty', {
         'id': Integer,

@@ -275,7 +275,7 @@ class SeasonMatches(Resource):
 
 @v1.route("/algo/<string:algo>")
 class Algo(Resource):
-    @api.marshal_with(api.models['Algo'], as_list=True)
+    @api.marshal_with(api.models['AlgoPseudos'], as_list=True)
     @api.expect(parser_algo_get)
     def get(self, algo):
         args = parser_algo_get.parse_args()
@@ -291,6 +291,26 @@ class AlgoUsers(Resource):
         args = parser_algo_users_get.parse_args()
         return algos.index(algo, args['season_id'])
 
+@v1.route("/algo/<string:algo>/from_pseudos")
+class AlgoFromPseudos(Resource):
+    @api.marshal_with(api.models['AlgoPseudos'], as_list=True)
+    @api.expect(parser_algo_from_pseudos)
+    def get(self, algo):
+        args = parser_algo_from_pseudos.parse_args()
+
+        pseudos = args['pseudos'] + [None for x in range(12 - len(args['pseudos']))]
+        players = orm.to_json(orm.get_users_by_pseudo(*pseudos))
+        ids = [x['id'] for x in players]
+        algo =  algos.run(algo, ids)
+        res = { 'r_pseudos' : [],
+         'b_pseudos': [],
+         'quality': algo['quality'] }
+        for id in algo['r_ids']:
+            res['r_pseudos'].append(next(pl['pseudo'] for pl in players if pl['id'] == id))
+        for id in algo['b_ids']:
+            res['b_pseudos'].append(next(pl['pseudo'] for pl in players if pl['id'] == id))
+
+        return res
 
 @v1.route("/algo/<string:algo>/users/<int:user_id>")
 class AlgoUser(Resource):

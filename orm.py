@@ -22,6 +22,23 @@ get_user_by_id = db.prepare("SELECT * FROM users WHERE id = $1 LIMIT 1")
 get_user_by_trigram = db.prepare("SELECT * FROM users WHERE trigram = $1 LIMIT 1")
 desactivate_user = db.prepare("UPDATE users SET is_active = false WHERE id = $1")
 get_user_by_pseudo = db.prepare("SELECT * FROM USERS WHERE $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1;")
+get_users_by_pseudo = db.prepare('''
+    SELECT id, pseudo FROM USERS 
+    WHERE 
+    $1 = ANY(USUAL_PSEUDOS) OR PSEUDO = $1
+    OR $2 = ANY(USUAL_PSEUDOS) OR PSEUDO = $2
+    OR $3 = ANY(USUAL_PSEUDOS) OR PSEUDO = $3
+    OR $4 = ANY(USUAL_PSEUDOS) OR PSEUDO = $4
+    OR $5 = ANY(USUAL_PSEUDOS) OR PSEUDO = $5
+    OR $6 = ANY(USUAL_PSEUDOS) OR PSEUDO = $6
+    OR $7 = ANY(USUAL_PSEUDOS) OR PSEUDO = $7
+    OR $8 = ANY(USUAL_PSEUDOS) OR PSEUDO = $8
+    OR $9 = ANY(USUAL_PSEUDOS) OR PSEUDO = $9
+    OR $10 = ANY(USUAL_PSEUDOS) OR PSEUDO = $10
+    OR $11 = ANY(USUAL_PSEUDOS) OR PSEUDO = $11
+    OR $12 = ANY(USUAL_PSEUDOS) OR PSEUDO = $12
+    ;
+''')
 award_gold_star = db.prepare("UPDATE users SET gold_stars = gold_stars + 1 WHERE id = $1 RETURNING gold_stars")
 award_silver_star = db.prepare("UPDATE users SET silver_stars = silver_stars + 1 WHERE id = $1 RETURNING silver_stars")
 award_copper_star = db.prepare("UPDATE users SET bronze_stars = bronze_stars + 1 WHERE id = $1 RETURNING bronze_stars")
