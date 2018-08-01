@@ -275,7 +275,7 @@ class SeasonMatches(Resource):
 
 @v1.route("/algo/<string:algo>")
 class Algo(Resource):
-    @api.marshal_with(api.models['AlgoPseudos'], as_list=True)
+    @api.marshal_with(api.models['Algo'], as_list=True)
     @api.expect(parser_algo_get)
     def get(self, algo):
         args = parser_algo_get.parse_args()
