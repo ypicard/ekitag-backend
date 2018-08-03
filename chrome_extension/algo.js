@@ -1,5 +1,6 @@
 var apiBaseUrl = 'https://ekitag-api.herokuapp.com/v1/';
-var htmlPlayerGroups = document.getElementsByClassName('player-group');
+var htmlPlayerGroups = document.querySelectorAll('#red-team > .player-group, #blue-team > .player-group, #waiting > .player-group')
+
 var players = [];
 for (var i = 0; i < htmlPlayerGroups.length; i++) {
   var htmlPlayers = htmlPlayerGroups[i].getElementsByClassName('player-name');
@@ -8,7 +9,7 @@ for (var i = 0; i < htmlPlayerGroups.length; i++) {
     players.push(htmlPlayers[j].innerHTML);
   }
 }
-
+console.log(players)
 // BUILD ALGO REQUEST
 var algoRequest = new XMLHttpRequest();
 console.log('Sending request...');
