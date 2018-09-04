@@ -8,8 +8,6 @@ import postgresql
 import postgresql.exceptions
 import postgresql.types
 
-db = postgresql.open(secret.get('pg_uri'))
-
 
 def create(user_id, season_id, description, value):
     try:

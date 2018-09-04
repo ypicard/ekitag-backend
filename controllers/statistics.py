@@ -8,8 +8,6 @@ import postgresql
 import postgresql.exceptions
 import postgresql.types
 
-db = postgresql.open(secret.get('pg_uri'))
-
 def rank(stat, method, season_id):
     res = orm.to_json(orm.get_ranking(stat, method, season_id))
     return {
