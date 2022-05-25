@@ -15,7 +15,7 @@ jsonschema==2.6.0
 MarkupSafe==1.0
 mpmath==1.0.0
 py-postgresql==1.2.1
-PyJWT==1.5.3
+PyJWT==2.4.0
 python-dateutil==2.6.1
 pytz==2017.3
 requests==2.19.1
